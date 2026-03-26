@@ -10,11 +10,11 @@ export function DealCard({ deal }: { deal: Deal }) {
   return (
     <Link
       href={`/investor/deals/${deal.id}`}
-      className="group block rounded-lg border border-border/50 bg-card p-5 transition-all hover:border-primary/30"
+      className="group block rounded-lg border border-border bg-card p-4 shadow-none transition-colors hover:border-muted-foreground/25"
     >
-      <div className="flex items-start justify-between gap-3 mb-3">
+      <div className="mb-2 flex items-start justify-between gap-2.5">
         <div className="min-w-0">
-          <h3 className="font-semibold text-lg truncate group-hover:text-primary transition-colors">
+          <h3 className="truncate text-lg font-semibold transition-colors group-hover:text-foreground">
             {deal.showName}
           </h3>
           <p className="text-xs text-muted-foreground mt-0.5">{deal.genre}</p>
@@ -22,11 +22,11 @@ export function DealCard({ deal }: { deal: Deal }) {
         <StatusBadge status={deal.dealStatus} />
       </div>
 
-      <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{deal.logline}</p>
+      <p className="mb-3 line-clamp-2 text-sm text-muted-foreground">{deal.logline}</p>
 
       <ProgressBar value={deal.amountRaised} max={deal.raiseTarget} />
 
-      <div className="grid grid-cols-3 gap-3 text-center mt-4 py-3 border-t border-border/50">
+      <div className="mt-3 grid grid-cols-3 gap-2 border-t border-border py-2.5 text-center sm:gap-3">
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground">
             <Film className="size-3" /> Target
@@ -47,10 +47,10 @@ export function DealCard({ deal }: { deal: Deal }) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between text-xs pt-3 border-t border-border/50">
+      <div className="flex items-center justify-between border-t border-border pt-3 text-xs">
         <span className="text-muted-foreground">{formatUSD(deal.pricePerUnit)} / unit</span>
-        <span className="text-primary font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
-          View Deal <ArrowRight className="size-3" />
+        <span className="flex items-center gap-1 font-medium text-muted-foreground transition-all group-hover:gap-2 group-hover:text-foreground">
+          View deal <ArrowRight className="size-3" />
         </span>
       </div>
     </Link>

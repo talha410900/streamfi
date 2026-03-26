@@ -3,6 +3,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CurrencyDisplay } from '@/components/shared/currency-display';
 import { TrendingUp, Users, DollarSign, Coins, ArrowUpRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { adminDensity, adminCardClass } from '@/components/admin/admin-density';
 
 interface StatCardProps {
   title: string;
@@ -13,19 +15,21 @@ interface StatCardProps {
 
 function StatCard({ title, value, icon, trend }: StatCardProps) {
   return (
-    <Card className="border border-border/50">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
-        <div className="text-primary">{icon}</div>
+    <Card className={adminCardClass()}>
+      <CardHeader className="flex flex-row items-center justify-between border-0 px-4 pb-2 pt-0">
+        <CardTitle className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          {title}
+        </CardTitle>
+        <div className="text-muted-foreground">{icon}</div>
       </CardHeader>
-      <CardContent className="flex flex-col gap-1">
-        <p className="text-2xl font-bold tracking-tight">{value}</p>
-        {trend && (
-          <p className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
-            <ArrowUpRight className="size-3" />
+      <CardContent className={cn('flex flex-col gap-1 pt-0', adminDensity.cardContent)}>
+        <p className="text-2xl font-semibold tracking-tight tabular-nums">{value}</p>
+        {trend ? (
+          <p className="flex items-center gap-1 text-xs text-chart-1">
+            <ArrowUpRight className="size-3 shrink-0" />
             {trend}
           </p>
-        )}
+        ) : null}
       </CardContent>
     </Card>
   );
@@ -33,7 +37,7 @@ function StatCard({ title, value, icon, trend }: StatCardProps) {
 
 export function AdminStats() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 lg:grid-cols-4">
       <StatCard
         title="Active Deals"
         value="3"

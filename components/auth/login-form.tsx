@@ -60,7 +60,9 @@ export function LoginForm() {
           <div className="size-10 bg-primary rounded-xl flex items-center justify-center">
             <Film className="size-5 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold text-foreground">StreamFi</span>
+          <span className="text-xl font-bold text-foreground">
+            StreamFi Ventures
+          </span>
         </div>
         <h1 className="text-3xl font-bold tracking-tight text-foreground">Welcome back</h1>
         <p className="text-muted-foreground">Sign in to access your investment portfolio</p>

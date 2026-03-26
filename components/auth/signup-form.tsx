@@ -62,10 +62,14 @@ export function SignupForm() {
           <div className="size-10 bg-primary rounded-xl flex items-center justify-center">
             <Film className="size-5 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold text-foreground">StreamFi</span>
+          <span className="text-xl font-bold text-foreground">
+            StreamFi Ventures
+          </span>
         </div>
         <h1 className="text-3xl font-bold tracking-tight text-foreground">Create Account</h1>
-        <p className="text-muted-foreground">Join StreamFi and start investing in premium content</p>
+        <p className="text-muted-foreground">
+          Join StreamFi Ventures and start investing in premium content
+        </p>
       </div>
 
       {/* Form */}

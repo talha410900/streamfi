@@ -10,9 +10,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Modal } from '@/components/shared/modal';
 import { DateDisplay } from '@/components/shared/date-display';
 import {
-  Upload, Download, FileText, FileCheck, FileWarning, Search, Filter,
-  FileSignature, FileSearch, FileChartLine, Film, Receipt
+  Upload, Download, FileText, FileCheck, FileWarning, Search,
+  FileSignature, FileChartLine, Film, Receipt
 } from 'lucide-react';
+import { DashboardPageHeader } from '@/components/shared/dashboard-page-header';
+import { cn } from '@/lib/utils';
+import { adminDensity, adminCardClass } from '@/components/admin/admin-density';
 
 const DOCUMENT_TYPES = [
   { value: 'subscription_agreement', label: 'Subscription Agreement', icon: FileSignature },
@@ -93,22 +96,21 @@ export default function AdminDocumentsPage() {
   })).filter(g => g.documents.length > 0);
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Document Management</h1>
-          <p className="text-muted-foreground mt-1">Upload and manage investor and deal documents</p>
-        </div>
-        <Button onClick={() => setIsUploading(true)}>
-          <Upload className="size-4 mr-2" />
-          Upload Document
-        </Button>
-      </div>
+    <div className={adminDensity.page}>
+      <DashboardPageHeader
+        title="Documents"
+        description="Central library for subscriptions, KYC, valuations, show files, and K-1s."
+        actions={
+          <Button onClick={() => setIsUploading(true)}>
+            <Upload data-icon="inline-start" />
+            Upload
+          </Button>
+        }
+      />
 
-      {/* Filters */}
-      <Card className="border border-border">
-        <CardContent className="pt-4">
-          <div className="flex flex-wrap gap-4">
+      <Card className={adminCardClass()}>
+        <CardContent className={cn('pt-3', adminDensity.cardContent)}>
+          <div className="flex flex-wrap gap-3">
             <div className="flex-1 min-w-[200px]">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
@@ -164,48 +166,48 @@ export default function AdminDocumentsPage() {
           <TabsTrigger value="pending">Pending Actions</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="all" className="mt-6">
-          <Card className="border border-border">
-            <CardHeader>
+        <TabsContent value="all" className="mt-3">
+          <Card className={adminCardClass()}>
+            <CardHeader className={adminDensity.cardHeader}>
               <CardTitle className="text-base">All Documents</CardTitle>
               <CardDescription>{filteredDocuments.length} documents found</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="border-b border-border">
                     <tr>
-                      <th className="text-left py-3 px-4 font-semibold">Document</th>
-                      <th className="text-left py-3 px-4 font-semibold">Type</th>
-                      <th className="text-left py-3 px-4 font-semibold">Deal</th>
-                      <th className="text-left py-3 px-4 font-semibold">Investor</th>
-                      <th className="text-left py-3 px-4 font-semibold">Status</th>
-                      <th className="text-left py-3 px-4 font-semibold">Uploaded</th>
-                      <th className="text-left py-3 px-4 font-semibold">Actions</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Document</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Type</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Deal</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Investor</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Status</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Uploaded</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredDocuments.map((doc) => (
                       <tr key={doc.id} className="border-b border-border/50 hover:bg-card">
-                        <td className="py-4 px-4">
-                          <div className="flex items-center gap-3">
+                        <td className={adminDensity.tableCell}>
+                          <div className="flex items-center gap-2">
                             {getTypeIcon(doc.type)}
                             <div>
-                              <p className="font-medium truncate max-w-[250px]">{doc.name}</p>
+                              <p className="max-w-[250px] truncate font-medium">{doc.name}</p>
                               <p className="text-xs text-muted-foreground">{doc.size}</p>
                             </div>
                           </div>
                         </td>
-                        <td className="py-4 px-4 text-muted-foreground">
+                        <td className={cn('text-muted-foreground', adminDensity.tableCell)}>
                           {DOCUMENT_TYPES.find(t => t.value === doc.type)?.label || doc.type}
                         </td>
-                        <td className="py-4 px-4">{doc.deal}</td>
-                        <td className="py-4 px-4">{doc.investor}</td>
-                        <td className="py-4 px-4">{getStatusBadge(doc.status)}</td>
-                        <td className="py-4 px-4 text-muted-foreground">
+                        <td className={adminDensity.tableCell}>{doc.deal}</td>
+                        <td className={adminDensity.tableCell}>{doc.investor}</td>
+                        <td className={adminDensity.tableCell}>{getStatusBadge(doc.status)}</td>
+                        <td className={cn('text-muted-foreground', adminDensity.tableCell)}>
                           <DateDisplay date={doc.uploaded_at} />
                         </td>
-                        <td className="py-4 px-4">
+                        <td className={adminDensity.tableCell}>
                           <Button variant="ghost" size="sm">
                             <Download className="size-4" />
                           </Button>
@@ -219,21 +221,21 @@ export default function AdminDocumentsPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="by-type" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <TabsContent value="by-type" className="mt-3">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 lg:grid-cols-3">
             {DOCUMENT_TYPES.map((type) => {
               const docs = documents.filter(d => d.type === type.value);
               const Icon = type.icon;
               return (
-                <Card key={type.value} className="border border-border">
-                  <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <Card key={type.value} className={cn('border border-border', adminCardClass())}>
+                  <CardHeader className={cn('flex flex-row items-center justify-between pb-2', adminDensity.cardHeader)}>
+                    <CardTitle className="flex items-center gap-2 text-sm font-medium">
                       <Icon className="size-4" />
                       {type.label}
                     </CardTitle>
                     <Badge variant="secondary">{docs.length}</Badge>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className={adminDensity.cardContent}>
                     {docs.length === 0 ? (
                       <p className="text-xs text-muted-foreground">No documents</p>
                     ) : (
@@ -258,25 +260,25 @@ export default function AdminDocumentsPage() {
           </div>
         </TabsContent>
 
-        <TabsContent value="pending" className="mt-6">
-          <Card className="border border-border">
-            <CardHeader>
+        <TabsContent value="pending" className="mt-3">
+          <Card className={adminCardClass()}>
+            <CardHeader className={adminDensity.cardHeader}>
               <CardTitle className="text-base">Documents Requiring Action</CardTitle>
               <CardDescription>Documents pending signature, review, or verification</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className={adminDensity.cardContent}>
               {filteredDocuments.filter(d => d.status.includes('pending')).length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <FileCheck className="size-12 mx-auto mb-2 opacity-50" />
+                <div className="py-6 text-center text-muted-foreground">
+                  <FileCheck className="mx-auto mb-2 size-10 opacity-50" />
                   <p>All documents are up to date</p>
                 </div>
               ) : (
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-2">
                   {filteredDocuments
                     .filter(d => d.status.includes('pending'))
                     .map(doc => (
-                      <div key={doc.id} className="flex items-center justify-between p-4 bg-card rounded-lg border border-border">
-                        <div className="flex items-center gap-3">
+                      <div key={doc.id} className="flex items-center justify-between rounded-lg border border-border bg-card p-3">
+                        <div className="flex items-center gap-2">
                           {getTypeIcon(doc.type)}
                           <div>
                             <p className="font-medium">{doc.name}</p>
@@ -309,13 +311,13 @@ export default function AdminDocumentsPage() {
         subtitle="Add a new document to the system"
         size="md"
       >
-        <div className="flex flex-col gap-4">
-          <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
-            <Upload className="size-8 mx-auto mb-2 text-muted-foreground" />
+        <div className="flex flex-col gap-3">
+          <div className="rounded-lg border-2 border-dashed border-border p-5 text-center">
+            <Upload className="mx-auto mb-2 size-7 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">Drag and drop a file here, or click to browse</p>
-            <Input type="file" className="mt-4" />
+            <Input type="file" className="mt-3" />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-sm font-medium mb-1 block">Document Type</label>
               <Select>
@@ -356,7 +358,7 @@ export default function AdminDocumentsPage() {
               </Select>
             </div>
           </div>
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-2 pt-2">
             <Button onClick={handleUpload}>Upload</Button>
             <Button variant="outline" onClick={() => setIsUploading(false)}>Cancel</Button>
           </div>

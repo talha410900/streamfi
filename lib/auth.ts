@@ -1,4 +1,4 @@
-// Auth utility functions for StreamFi
+// Auth utility functions for StreamFi Ventures
 // Note: Since no integrations are enabled, using mock auth for demo purposes
 
 export type UserRole = 'admin' | 'investor';

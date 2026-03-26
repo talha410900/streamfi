@@ -6,6 +6,9 @@ import { Button } from '@/components/ui/button';
 import { TokenIssuanceModal } from '@/components/admin/token-issuance-modal';
 import { CurrencyDisplay } from '@/components/shared/currency-display';
 import { Plus, Coins } from 'lucide-react';
+import { DashboardPageHeader } from '@/components/shared/dashboard-page-header';
+import { cn } from '@/lib/utils';
+import { adminDensity, adminCardClass } from '@/components/admin/admin-density';
 
 export default function AdminTokensPage() {
   const [deals] = useState([
@@ -42,62 +45,64 @@ export default function AdminTokensPage() {
   const totalSupply = deals.reduce((sum, d) => sum + d.total_tokens, 0);
 
   return (
-    <div className="flex flex-col gap-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Token Issuance</h1>
-        <p className="text-muted-foreground mt-1">Manage token allocation and distribution across deals</p>
-      </div>
+    <div className={adminDensity.page}>
+      <DashboardPageHeader
+        title="Tokens"
+        description="Supply, issuance, and linkage to funded subscriptions."
+      />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="border border-border/50">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-4">
+        <Card className={adminCardClass()}>
+          <CardHeader className={cn('flex flex-row items-center justify-between pb-2', adminDensity.cardHeader)}>
             <CardTitle className="text-sm font-medium text-muted-foreground">Total Supply</CardTitle>
             <Coins className="size-4 text-primary" />
           </CardHeader>
-          <CardContent>
+          <CardContent className={adminDensity.cardContent}>
             <p className="text-2xl font-bold tracking-tight">{totalSupply.toLocaleString()}</p>
-            <p className="text-xs text-muted-foreground mt-1">tokens across all deals</p>
+            <p className="mt-1 text-xs text-muted-foreground">tokens across all deals</p>
           </CardContent>
         </Card>
-        <Card className="border border-border/50">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <Card className={adminCardClass()}>
+          <CardHeader className={cn('flex flex-row items-center justify-between pb-2', adminDensity.cardHeader)}>
             <CardTitle className="text-sm font-medium text-muted-foreground">Issued Tokens</CardTitle>
             <Coins className="size-4 text-primary" />
           </CardHeader>
-          <CardContent>
+          <CardContent className={adminDensity.cardContent}>
             <p className="text-2xl font-bold tracking-tight">{totalIssued.toLocaleString()}</p>
-            <p className="text-xs text-muted-foreground mt-1">tokens distributed</p>
+            <p className="mt-1 text-xs text-muted-foreground">tokens distributed</p>
           </CardContent>
         </Card>
-        <Card className="border border-border/50">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <Card className={adminCardClass()}>
+          <CardHeader className={cn('flex flex-row items-center justify-between pb-2', adminDensity.cardHeader)}>
             <CardTitle className="text-sm font-medium text-muted-foreground">Available</CardTitle>
             <Coins className="size-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold tracking-tight">{(totalSupply - totalIssued).toLocaleString()}</p>
-            <p className="text-xs text-muted-foreground mt-1">tokens remaining</p>
+          <CardContent className={adminDensity.cardContent}>
+            <p className="text-2xl font-bold tracking-tight">
+              {(totalSupply - totalIssued).toLocaleString()}
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">tokens remaining</p>
           </CardContent>
         </Card>
       </div>
 
-      <Card className="border border-border/50">
-        <CardHeader>
+      <Card className={adminCardClass()}>
+        <CardHeader className={adminDensity.cardHeader}>
           <CardTitle>Token Issuance Tracker</CardTitle>
           <CardDescription>Manage token distribution per deal</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="border-b border-border">
                 <tr>
-                  <th className="text-left py-3 px-4 font-semibold">Deal</th>
-                  <th className="text-left py-3 px-4 font-semibold">Unit Price</th>
-                  <th className="text-left py-3 px-4 font-semibold">Total Tokens</th>
-                  <th className="text-left py-3 px-4 font-semibold">Issued</th>
-                  <th className="text-left py-3 px-4 font-semibold">Remaining</th>
-                  <th className="text-left py-3 px-4 font-semibold">Progress</th>
-                  <th className="text-left py-3 px-4 font-semibold">Actions</th>
+                  <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Deal</th>
+                  <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Unit Price</th>
+                  <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Total Tokens</th>
+                  <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Issued</th>
+                  <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Remaining</th>
+                  <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Progress</th>
+                  <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -105,33 +110,39 @@ export default function AdminTokensPage() {
                   const remaining = deal.total_tokens - deal.issued_tokens;
                   const progress = (deal.issued_tokens / deal.total_tokens) * 100;
                   return (
-                    <tr key={deal.id} className="border-b border-border/50 hover:bg-card transition-colors">
-                      <td className="py-4 px-4 font-semibold">{deal.title}</td>
-                      <td className="py-4 px-4">
+                    <tr key={deal.id} className="border-b border-border/50 transition-colors hover:bg-card">
+                      <td className={cn('font-semibold', adminDensity.tableCell)}>{deal.title}</td>
+                      <td className={adminDensity.tableCell}>
                         <CurrencyDisplay amount={deal.unit_price} />
                       </td>
-                      <td className="py-4 px-4">{deal.total_tokens.toLocaleString()}</td>
-                      <td className="py-4 px-4 font-semibold">{deal.issued_tokens.toLocaleString()}</td>
-                      <td className="py-4 px-4 text-muted-foreground">{remaining.toLocaleString()}</td>
-                      <td className="py-4 px-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-24 bg-muted rounded-full h-2 overflow-hidden">
+                      <td className={adminDensity.tableCell}>{deal.total_tokens.toLocaleString()}</td>
+                      <td className={cn('font-semibold', adminDensity.tableCell)}>
+                        {deal.issued_tokens.toLocaleString()}
+                      </td>
+                      <td className={cn('text-muted-foreground', adminDensity.tableCell)}>
+                        {remaining.toLocaleString()}
+                      </td>
+                      <td className={adminDensity.tableCell}>
+                        <div className="flex items-center gap-2">
+                          <div className="h-2 w-20 overflow-hidden rounded-full bg-muted">
                             <div
-                              className="bg-primary h-2 rounded-full transition-all"
+                              className="h-2 rounded-full bg-primary transition-all"
                               style={{ width: `${Math.min(progress, 100)}%` }}
                             />
                           </div>
-                          <span className="text-xs font-medium text-muted-foreground min-w-max">{Math.round(progress)}%</span>
+                          <span className="min-w-max text-xs font-medium text-muted-foreground">
+                            {Math.round(progress)}%
+                          </span>
                         </div>
                       </td>
-                      <td className="py-4 px-4">
+                      <td className={adminDensity.tableCell}>
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => handleOpenModal(deal)}
                           disabled={remaining === 0}
                         >
-                          <Plus className="size-3 mr-1" />
+                          <Plus className="mr-1 size-3" />
                           Issue
                         </Button>
                       </td>

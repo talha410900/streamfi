@@ -1,20 +1,22 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { DashboardPageHeader } from '@/components/shared/dashboard-page-header';
+import { adminDensity, adminCardClass } from '@/components/admin/admin-density';
 
 export default function AdminSettingsPage() {
   return (
-    <div className="flex flex-col gap-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground mt-1">Manage admin preferences and system settings</p>
-      </div>
+    <div className={adminDensity.page}>
+      <DashboardPageHeader
+        title="Settings"
+        description="Organization defaults, integrations, and admin preferences."
+      />
 
-      <Card className="border border-border/50">
-        <CardHeader>
-          <CardTitle>Admin Settings</CardTitle>
-          <CardDescription>Configure your admin preferences</CardDescription>
+      <Card className={adminCardClass()}>
+        <CardHeader className={adminDensity.cardHeader}>
+          <CardTitle className="text-base font-semibold">Admin settings</CardTitle>
+          <CardDescription>Configure how the operations console behaves</CardDescription>
         </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground">Settings interface coming soon.</p>
+        <CardContent className={adminDensity.cardContent}>
+          <p className="text-sm text-muted-foreground">Settings interface coming soon.</p>
         </CardContent>
       </Card>
     </div>

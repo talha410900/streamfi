@@ -15,6 +15,11 @@ import {
   Search, Target, Percent, Users, ArrowRight, Film,
   TrendingUp, Calendar, FileText, DollarSign
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import {
+  investorDensity,
+  investorCardClass,
+} from '@/components/investor/investor-density';
 
 const allDeals = [
   {
@@ -127,50 +132,60 @@ export default function InvestorDealsPage() {
   const openDeals = allDeals.filter(d => d.status === 'open');
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Deal Marketplace</h1>
-        <p className="text-muted-foreground mt-1">Explore investment opportunities in streaming content</p>
+    <div className={investorDensity.pageTight}>
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">Deal marketplace</h1>
+        <p className="max-w-2xl text-sm text-muted-foreground">
+          Open show offerings — valuation, raise target, and revenue share in one view.
+        </p>
       </div>
 
       {/* Featured Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="border border-primary/20 bg-primary/5">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-primary mb-2">
-              <TrendingUp className="size-4" />
-              <span className="text-sm font-medium">Open Deals</span>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-4">
+        <Card className={investorCardClass()}>
+          <CardContent
+            className={cn('flex flex-col gap-2 pt-4', investorDensity.cardContent)}
+          >
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <TrendingUp className="size-4 shrink-0" />
+              <span className="text-xs font-medium uppercase tracking-wide">Open deals</span>
             </div>
-            <p className="text-2xl font-bold">{openDeals.length}</p>
-            <p className="text-xs text-muted-foreground">Available for investment</p>
+            <p className="text-2xl font-semibold tabular-nums">{openDeals.length}</p>
+            <p className="text-xs text-muted-foreground">Available to subscribe</p>
           </CardContent>
         </Card>
-        <Card className="border border-border">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-2">
-              <DollarSign className="size-4" />
-              <span className="text-sm font-medium">Total Seeking</span>
+        <Card className={investorCardClass()}>
+          <CardContent
+            className={cn('flex flex-col gap-2 pt-4', investorDensity.cardContent)}
+          >
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <DollarSign className="size-4 shrink-0" />
+              <span className="text-xs font-medium uppercase tracking-wide">Capital seeking</span>
             </div>
-            <p className="text-2xl font-bold">
+            <p className="text-2xl font-semibold tabular-nums">
               <CurrencyDisplay amount={openDeals.reduce((sum, d) => sum + d.raiseTarget, 0)} compact />
             </p>
           </CardContent>
         </Card>
-        <Card className="border border-border">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-2">
-              <Users className="size-4" />
-              <span className="text-sm font-medium">Total Investors</span>
+        <Card className={investorCardClass()}>
+          <CardContent
+            className={cn('flex flex-col gap-2 pt-4', investorDensity.cardContent)}
+          >
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Users className="size-4 shrink-0" />
+              <span className="text-xs font-medium uppercase tracking-wide">Investor seats</span>
             </div>
-            <p className="text-2xl font-bold">{allDeals.reduce((sum, d) => sum + d.investors, 0)}</p>
+            <p className="text-2xl font-semibold tabular-nums">
+              {allDeals.reduce((sum, d) => sum + d.investors, 0)}
+            </p>
           </CardContent>
         </Card>
       </div>
 
       {/* Filters */}
-      <Card className="border border-border">
-        <CardContent className="pt-4">
-          <div className="flex flex-wrap gap-4">
+      <Card className={investorCardClass()}>
+        <CardContent className={cn('py-3', investorDensity.cardContent)}>
+          <div className="flex flex-wrap gap-3">
             <div className="flex-1 min-w-[200px]">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
@@ -207,7 +222,7 @@ export default function InvestorDealsPage() {
       </Card>
 
       {/* Deals Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
         {filteredDeals.map((deal) => {
           const progress = (deal.raised / deal.raiseTarget) * 100;
           const isOpen = deal.status === 'open';
@@ -215,9 +230,14 @@ export default function InvestorDealsPage() {
 
           return (
             <Link key={deal.id} href={`/investor/deals/${deal.id}`}>
-              <Card className="border border-border h-full hover:border-primary/50 hover:shadow-lg transition-all cursor-pointer">
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between gap-3">
+              <Card
+                className={cn(
+                  investorCardClass(),
+                  'h-full cursor-pointer transition-colors hover:border-muted-foreground/30',
+                )}
+              >
+                <CardHeader className={cn('pb-2', investorDensity.cardHeader)}>
+                  <div className="flex items-start justify-between gap-2.5">
                     <div>
                       <CardTitle className="text-lg">{deal.title}</CardTitle>
                       <div className="flex items-center gap-2 mt-1">
@@ -229,10 +249,14 @@ export default function InvestorDealsPage() {
                     </div>
                     <StatusBadge status={deal.status} />
                   </div>
-                  <p className="text-sm text-muted-foreground line-clamp-2 mt-2">{deal.description}</p>
+                  <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">
+                    {deal.description}
+                  </p>
                 </CardHeader>
 
-                <CardContent className="flex flex-col gap-4">
+                <CardContent
+                  className={cn('flex flex-col gap-3', investorDensity.cardContent)}
+                >
                   {/* Progress */}
                   <div>
                     <div className="flex items-center justify-between mb-2">
@@ -245,16 +269,16 @@ export default function InvestorDealsPage() {
                   </div>
 
                   {/* Key Metrics */}
-                  <div className="grid grid-cols-3 gap-3 text-sm">
-                    <div className="p-2 bg-muted/50 rounded-lg text-center">
+                  <div className="grid grid-cols-3 gap-2 text-sm sm:gap-3">
+                    <div className="rounded-lg bg-muted/50 p-1.5 text-center sm:p-2">
                       <p className="text-xs text-muted-foreground">Valuation</p>
                       <p className="font-semibold"><CurrencyDisplay amount={deal.valuation} compact /></p>
                     </div>
-                    <div className="p-2 bg-muted/50 rounded-lg text-center">
+                    <div className="rounded-lg bg-muted/50 p-1.5 text-center sm:p-2">
                       <p className="text-xs text-muted-foreground">Rev Share</p>
                       <p className="font-semibold">{deal.revenueShare}%</p>
                     </div>
-                    <div className="p-2 bg-muted/50 rounded-lg text-center">
+                    <div className="rounded-lg bg-muted/50 p-1.5 text-center sm:p-2">
                       <p className="text-xs text-muted-foreground">Investors</p>
                       <p className="font-semibold">{deal.investors}</p>
                     </div>
@@ -291,8 +315,8 @@ export default function InvestorDealsPage() {
       </div>
 
       {filteredDeals.length === 0 && (
-        <Card className="border border-border">
-          <CardContent className="py-12 text-center">
+        <Card className={investorCardClass()}>
+          <CardContent className="py-8 text-center">
             <p className="text-muted-foreground">No deals found matching your criteria</p>
           </CardContent>
         </Card>

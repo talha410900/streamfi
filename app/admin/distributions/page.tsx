@@ -12,9 +12,12 @@ import { Modal } from '@/components/shared/modal';
 import { CurrencyDisplay } from '@/components/shared/currency-display';
 import { DateDisplay } from '@/components/shared/date-display';
 import {
-  DollarSign, Send, Calculator, FileText, CheckCircle, Clock, AlertCircle,
-  TrendingUp, Percent, Users, ArrowUpRight, Download
+  DollarSign, Send, Calculator, CheckCircle, Clock,
+  TrendingUp, Users, ArrowUpRight, Download
 } from 'lucide-react';
+import { DashboardPageHeader } from '@/components/shared/dashboard-page-header';
+import { cn } from '@/lib/utils';
+import { adminDensity, adminCardClass } from '@/components/admin/admin-density';
 
 const mockDeals = [
   { id: 1, title: 'Midnight Heist', total_invested: 320000, investor_count: 12, revenue_share: 15, units_issued: 32000 },
@@ -147,54 +150,57 @@ export default function AdminDistributionsPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Distributions</h1>
-          <p className="text-muted-foreground mt-1">Calculate and manage investor payouts</p>
-        </div>
-        <Button onClick={() => setIsCalculating(true)}>
-          <Calculator className="size-4 mr-2" />
-          Calculate Distribution
-        </Button>
-      </div>
+    <div className={adminDensity.page}>
+      <DashboardPageHeader
+        title="Distributions"
+        description="Model fees, allocate investor pools, and track payout status."
+        actions={
+          <Button onClick={() => setIsCalculating(true)}>
+            <Calculator data-icon="inline-start" />
+            Calculate distribution
+          </Button>
+        }
+      />
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="border border-border">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-1">
-              <CheckCircle className="size-4" />
-              <span className="text-xs font-medium">Total Distributed</span>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-4 md:gap-4">
+        <Card className={adminCardClass()}>
+          <CardContent className={cn('flex flex-col gap-1.5 pt-4', adminDensity.cardContent)}>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <CheckCircle className="size-4 shrink-0" />
+              <span className="text-xs font-medium uppercase tracking-wide">Distributed</span>
             </div>
-            <p className="text-2xl font-bold"><CurrencyDisplay amount={totalDistributed} /></p>
+            <p className="text-2xl font-semibold tabular-nums">
+              <CurrencyDisplay amount={totalDistributed} />
+            </p>
           </CardContent>
         </Card>
-        <Card className="border border-border">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-1">
-              <Clock className="size-4" />
-              <span className="text-xs font-medium">Pending</span>
+        <Card className={adminCardClass()}>
+          <CardContent className={cn('flex flex-col gap-1.5 pt-4', adminDensity.cardContent)}>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Clock className="size-4 shrink-0" />
+              <span className="text-xs font-medium uppercase tracking-wide">Pending</span>
             </div>
-            <p className="text-2xl font-bold"><CurrencyDisplay amount={totalPending} /></p>
+            <p className="text-2xl font-semibold tabular-nums">
+              <CurrencyDisplay amount={totalPending} />
+            </p>
           </CardContent>
         </Card>
-        <Card className="border border-border">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-1">
-              <TrendingUp className="size-4" />
-              <span className="text-xs font-medium">Distribution Events</span>
+        <Card className={adminCardClass()}>
+          <CardContent className={cn('flex flex-col gap-1.5 pt-4', adminDensity.cardContent)}>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <TrendingUp className="size-4 shrink-0" />
+              <span className="text-xs font-medium uppercase tracking-wide">Events</span>
             </div>
-            <p className="text-2xl font-bold">{distributions.length}</p>
+            <p className="text-2xl font-semibold tabular-nums">{distributions.length}</p>
           </CardContent>
         </Card>
-        <Card className="border border-border">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-1">
-              <Users className="size-4" />
-              <span className="text-xs font-medium">Investors Paid</span>
+        <Card className={adminCardClass()}>
+          <CardContent className={cn('flex flex-col gap-1.5 pt-4', adminDensity.cardContent)}>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Users className="size-4 shrink-0" />
+              <span className="text-xs font-medium uppercase tracking-wide">Paid seats</span>
             </div>
-            <p className="text-2xl font-bold">{totalInvestors}</p>
+            <p className="text-2xl font-semibold tabular-nums">{totalInvestors}</p>
           </CardContent>
         </Card>
       </div>
@@ -206,25 +212,25 @@ export default function AdminDistributionsPage() {
           <TabsTrigger value="fee-structure">Fee Structure</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="distributions" className="mt-6">
-          <Card className="border border-border">
-            <CardHeader>
+        <TabsContent value="distributions" className="mt-3">
+          <Card className={adminCardClass()}>
+            <CardHeader className={adminDensity.cardHeader}>
               <CardTitle className="text-base">Distribution History</CardTitle>
               <CardDescription>All revenue distribution events</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="border-b border-border">
                     <tr>
-                      <th className="text-left py-3 px-4 font-semibold">Deal</th>
-                      <th className="text-left py-3 px-4 font-semibold">Revenue</th>
-                      <th className="text-left py-3 px-4 font-semibold">Fees</th>
-                      <th className="text-left py-3 px-4 font-semibold">Investor Share</th>
-                      <th className="text-left py-3 px-4 font-semibold">Per Unit</th>
-                      <th className="text-left py-3 px-4 font-semibold">Progress</th>
-                      <th className="text-left py-3 px-4 font-semibold">Date</th>
-                      <th className="text-left py-3 px-4 font-semibold">Actions</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Deal</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Revenue</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Fees</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Investor Share</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Per Unit</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Progress</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Date</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -232,32 +238,32 @@ export default function AdminDistributionsPage() {
                       const progress = (dist.investors_paid / dist.investors_total) * 100;
                       return (
                         <tr key={dist.id} className="border-b border-border/50 hover:bg-card">
-                          <td className="py-4 px-4 font-medium">{dist.deal_title}</td>
-                          <td className="py-4 px-4"><CurrencyDisplay amount={dist.revenue_amount} /></td>
-                          <td className="py-4 px-4 text-muted-foreground">
+                          <td className={cn('font-medium', adminDensity.tableCell)}>{dist.deal_title}</td>
+                          <td className={adminDensity.tableCell}><CurrencyDisplay amount={dist.revenue_amount} /></td>
+                          <td className={cn('text-muted-foreground', adminDensity.tableCell)}>
                             <CurrencyDisplay amount={dist.platform_fee + dist.management_fee} />
                           </td>
-                          <td className="py-4 px-4 font-semibold text-green-600 dark:text-green-400">
+                          <td className={cn('font-semibold text-chart-1', adminDensity.tableCell)}>
                             <CurrencyDisplay amount={dist.total_distribution} />
                           </td>
-                          <td className="py-4 px-4"><CurrencyDisplay amount={dist.per_unit} /></td>
-                          <td className="py-4 px-4">
+                          <td className={adminDensity.tableCell}><CurrencyDisplay amount={dist.per_unit} /></td>
+                          <td className={adminDensity.tableCell}>
                             <div className="flex items-center gap-2">
-                              <Progress value={progress} className="w-16 h-1.5" />
+                              <Progress value={progress} className="h-1.5 w-16" />
                               <span className="text-xs">{dist.investors_paid}/{dist.investors_total}</span>
                             </div>
                           </td>
-                          <td className="py-4 px-4 text-muted-foreground">
+                          <td className={cn('text-muted-foreground', adminDensity.tableCell)}>
                             <DateDisplay date={dist.date} />
                           </td>
-                          <td className="py-4 px-4">
+                          <td className={adminDensity.tableCell}>
                             {dist.status === 'pending' ? (
                               <Button size="sm">
                                 <Send className="size-3 mr-1" />
                                 Send
                               </Button>
                             ) : (
-                              <Badge className="bg-green-600">Completed</Badge>
+                              <Badge variant="default">Completed</Badge>
                             )}
                           </td>
                         </tr>
@@ -270,51 +276,51 @@ export default function AdminDistributionsPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="ledger" className="mt-6">
-          <Card className="border border-border">
-            <CardHeader className="flex flex-row items-center justify-between">
+        <TabsContent value="ledger" className="mt-3">
+          <Card className={adminCardClass()}>
+            <CardHeader className={cn('flex flex-row items-center justify-between', adminDensity.cardHeader)}>
               <div>
                 <CardTitle className="text-base">Payout Ledger</CardTitle>
                 <CardDescription>Individual investor payouts</CardDescription>
               </div>
               <Button variant="outline" size="sm">
-                <Download className="size-4 mr-2" />
+                <Download className="mr-2 size-4" />
                 Export CSV
               </Button>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="border-b border-border">
                     <tr>
-                      <th className="text-left py-3 px-4 font-semibold">Investor</th>
-                      <th className="text-left py-3 px-4 font-semibold">Deal</th>
-                      <th className="text-left py-3 px-4 font-semibold">Units</th>
-                      <th className="text-left py-3 px-4 font-semibold">Per Unit</th>
-                      <th className="text-left py-3 px-4 font-semibold">Amount</th>
-                      <th className="text-left py-3 px-4 font-semibold">Status</th>
-                      <th className="text-left py-3 px-4 font-semibold">Date</th>
-                      <th className="text-left py-3 px-4 font-semibold">TX Hash</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Investor</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Deal</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Units</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Per Unit</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Amount</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Status</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Date</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>TX Hash</th>
                     </tr>
                   </thead>
                   <tbody>
                     {mockPayoutLedger.map((payout) => (
                       <tr key={payout.id} className="border-b border-border/50 hover:bg-card">
-                        <td className="py-4 px-4 font-medium">{payout.investor}</td>
-                        <td className="py-4 px-4">{payout.deal}</td>
-                        <td className="py-4 px-4">{payout.units.toLocaleString()}</td>
-                        <td className="py-4 px-4"><CurrencyDisplay amount={payout.per_unit} /></td>
-                        <td className="py-4 px-4 font-semibold">
+                        <td className={cn('font-medium', adminDensity.tableCell)}>{payout.investor}</td>
+                        <td className={adminDensity.tableCell}>{payout.deal}</td>
+                        <td className={adminDensity.tableCell}>{payout.units.toLocaleString()}</td>
+                        <td className={adminDensity.tableCell}><CurrencyDisplay amount={payout.per_unit} /></td>
+                        <td className={cn('font-semibold', adminDensity.tableCell)}>
                           <CurrencyDisplay amount={payout.amount} />
                         </td>
-                        <td className="py-4 px-4">
-                          <Badge className="bg-green-600">Paid</Badge>
+                        <td className={adminDensity.tableCell}>
+                          <Badge variant="default">Paid</Badge>
                         </td>
-                        <td className="py-4 px-4 text-muted-foreground">
+                        <td className={cn('text-muted-foreground', adminDensity.tableCell)}>
                           <DateDisplay date={payout.date} />
                         </td>
-                        <td className="py-4 px-4">
-                          <code className="text-xs bg-muted px-2 py-1 rounded">{payout.tx_hash}</code>
+                        <td className={adminDensity.tableCell}>
+                          <code className="rounded bg-muted px-2 py-1 text-xs">{payout.tx_hash}</code>
                         </td>
                       </tr>
                     ))}
@@ -325,30 +331,30 @@ export default function AdminDistributionsPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="fee-structure" className="mt-6">
-          <Card className="border border-border">
-            <CardHeader>
+        <TabsContent value="fee-structure" className="mt-3">
+          <Card className={adminCardClass()}>
+            <CardHeader className={adminDensity.cardHeader}>
               <CardTitle className="text-base">Fee Structure</CardTitle>
               <CardDescription>Current fee configuration for distributions</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 bg-card rounded-lg border border-border">
-                  <div className="flex items-center justify-between mb-2">
+            <CardContent className={adminDensity.cardContent}>
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-4">
+                <div className="rounded-lg border border-border bg-card p-3">
+                  <div className="mb-1.5 flex items-center justify-between">
                     <span className="text-sm font-medium">Platform Fee</span>
                     <Badge>{FEE_STRUCTURE.platform_fee}%</Badge>
                   </div>
                   <p className="text-xs text-muted-foreground">Deducted from gross revenue before distribution</p>
                 </div>
-                <div className="p-4 bg-card rounded-lg border border-border">
-                  <div className="flex items-center justify-between mb-2">
+                <div className="rounded-lg border border-border bg-card p-3">
+                  <div className="mb-1.5 flex items-center justify-between">
                     <span className="text-sm font-medium">Management Fee</span>
                     <Badge>{FEE_STRUCTURE.management_fee}%</Badge>
                   </div>
                   <p className="text-xs text-muted-foreground">Ongoing management and administration</p>
                 </div>
-                <div className="p-4 bg-card rounded-lg border border-border">
-                  <div className="flex items-center justify-between mb-2">
+                <div className="rounded-lg border border-border bg-card p-3">
+                  <div className="mb-1.5 flex items-center justify-between">
                     <span className="text-sm font-medium">Performance Fee</span>
                     <Badge>{FEE_STRUCTURE.performance_fee}%</Badge>
                   </div>
@@ -373,8 +379,8 @@ export default function AdminDistributionsPage() {
         subtitle="Input revenue and calculate investor payouts"
         size="lg"
       >
-        <div className="flex flex-col gap-6">
-          <div className="grid grid-cols-2 gap-4">
+        <div className="flex flex-col gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-sm font-medium mb-2 block">Select Deal</label>
               <Select value={selectedDeal?.id.toString()} onValueChange={(v) => setSelectedDeal(mockDeals.find(d => d.id.toString() === v) || null)}>
@@ -404,8 +410,8 @@ export default function AdminDistributionsPage() {
           </div>
 
           {selectedDeal && (
-            <div className="p-4 bg-card rounded-lg border border-border text-sm">
-              <div className="grid grid-cols-3 gap-4">
+            <div className="rounded-lg border border-border bg-card p-3 text-sm">
+              <div className="grid grid-cols-3 gap-3">
                 <div>
                   <p className="text-muted-foreground">Investor Share</p>
                   <p className="font-semibold">{selectedDeal.revenue_share}%</p>
@@ -428,9 +434,9 @@ export default function AdminDistributionsPage() {
           </Button>
 
           {calculations && (
-            <div className="p-4 bg-green-50 dark:bg-green-950/30 rounded-lg border border-green-200 dark:border-green-900">
-              <h4 className="font-semibold mb-3 flex items-center gap-2">
-                <ArrowUpRight className="size-4 text-green-600" />
+            <div className="rounded-lg border border-green-200 bg-green-50 p-3 dark:border-green-900 dark:bg-green-950/30">
+              <h4 className="mb-2 flex items-center gap-2 font-semibold">
+                <ArrowUpRight className="size-4 text-chart-1" />
                 Distribution Calculation
               </h4>
               <div className="grid grid-cols-2 gap-3 text-sm">
@@ -452,7 +458,7 @@ export default function AdminDistributionsPage() {
                 </div>
                 <div className="col-span-2 pt-2 border-t border-border">
                   <p className="text-muted-foreground">Investor Distribution</p>
-                  <p className="text-xl font-bold text-green-600"><CurrencyDisplay amount={calculations.investorShare} /></p>
+                  <p className="text-xl font-semibold text-chart-1"><CurrencyDisplay amount={calculations.investorShare} /></p>
                   <p className="text-xs text-muted-foreground mt-1">
                     <CurrencyDisplay amount={calculations.perUnit} /> per unit × {calculations.unitsIssued.toLocaleString()} units
                   </p>

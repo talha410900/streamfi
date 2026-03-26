@@ -12,6 +12,12 @@ import {
   Download, ArrowUpRight, TrendingUp, DollarSign, Calendar,
   Coins, Filter, ExternalLink, Wallet, FileText
 } from 'lucide-react';
+import { DashboardPageHeader } from '@/components/shared/dashboard-page-header';
+import { cn } from '@/lib/utils';
+import {
+  investorDensity,
+  investorCardClass,
+} from '@/components/investor/investor-density';
 
 const distributions = [
   { id: 1, deal: 'Midnight Heist', type: 'Revenue Distribution', amount: 2500, perUnit: 0.05, units: 50000, date: '2026-03-20', status: 'received', txHash: '5Kp9QmNvR2tX8wZ5yB3cF6dG...' },
@@ -46,75 +52,83 @@ export default function InvestorDistributionsPage() {
   }));
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Distributions</h1>
-        <p className="text-muted-foreground mt-1">Track your revenue distributions and earnings from investments</p>
-      </div>
+    <div className={investorDensity.page}>
+      <DashboardPageHeader
+        title="Distributions"
+        description="Revenue paid to your wallet by deal, with export and tax context."
+      />
 
-      {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="border border-primary/20 bg-primary/5">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-primary mb-2">
-              <DollarSign className="size-4" />
-              <span className="text-sm font-medium">Total Received</span>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-4 md:gap-4">
+        <Card className={investorCardClass()}>
+          <CardContent
+            className={cn('flex flex-col gap-2 pt-4', investorDensity.cardContent)}
+          >
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <DollarSign className="size-4 shrink-0" />
+              <span className="text-xs font-medium uppercase tracking-wide">Total received</span>
             </div>
-            <p className="text-2xl font-bold"><CurrencyDisplay amount={totalReceived} /></p>
-            <p className="text-xs text-muted-foreground mt-1">Lifetime earnings</p>
+            <p className="text-2xl font-semibold tabular-nums text-chart-1">
+              <CurrencyDisplay amount={totalReceived} />
+            </p>
+            <p className="text-xs text-muted-foreground">Lifetime</p>
           </CardContent>
         </Card>
-        <Card className="border border-border">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-2">
-              <TrendingUp className="size-4" />
-              <span className="text-sm font-medium">Distributions</span>
+        <Card className={investorCardClass()}>
+          <CardContent
+            className={cn('flex flex-col gap-2 pt-4', investorDensity.cardContent)}
+          >
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <TrendingUp className="size-4 shrink-0" />
+              <span className="text-xs font-medium uppercase tracking-wide">Payments</span>
             </div>
-            <p className="text-2xl font-bold">{totalDistributions}</p>
-            <p className="text-xs text-muted-foreground mt-1">Total payments</p>
+            <p className="text-2xl font-semibold tabular-nums">{totalDistributions}</p>
+            <p className="text-xs text-muted-foreground">Count</p>
           </CardContent>
         </Card>
-        <Card className="border border-border">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-2">
-              <Coins className="size-4" />
-              <span className="text-sm font-medium">Active Deals</span>
+        <Card className={investorCardClass()}>
+          <CardContent
+            className={cn('flex flex-col gap-2 pt-4', investorDensity.cardContent)}
+          >
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Coins className="size-4 shrink-0" />
+              <span className="text-xs font-medium uppercase tracking-wide">Active deals</span>
             </div>
-            <p className="text-2xl font-bold">{investments.length}</p>
-            <p className="text-xs text-muted-foreground mt-1">Generating revenue</p>
+            <p className="text-2xl font-semibold tabular-nums">{investments.length}</p>
+            <p className="text-xs text-muted-foreground">Positions</p>
           </CardContent>
         </Card>
-        <Card className="border border-border">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-2">
-              <Wallet className="size-4" />
-              <span className="text-sm font-medium">Avg Per Distribution</span>
+        <Card className={investorCardClass()}>
+          <CardContent
+            className={cn('flex flex-col gap-2 pt-4', investorDensity.cardContent)}
+          >
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Wallet className="size-4 shrink-0" />
+              <span className="text-xs font-medium uppercase tracking-wide">Avg payment</span>
             </div>
-            <p className="text-2xl font-bold">
+            <p className="text-2xl font-semibold tabular-nums">
               <CurrencyDisplay amount={totalReceived / totalDistributions} />
             </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* By Deal Summary */}
-      <Card className="border border-border">
-        <CardHeader>
+      <Card className={investorCardClass()}>
+        <CardHeader className={investorDensity.cardHeader}>
           <CardTitle className="text-base">Distributions by Deal</CardTitle>
           <CardDescription>Breakdown of earnings per investment</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <CardContent className={investorDensity.cardContentSection}>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
             {dealStats.map((stat) => (
-              <div key={stat.id} className="p-4 bg-card rounded-lg border border-border">
-                <div className="flex items-center justify-between mb-3">
+              <div key={stat.id} className="rounded-lg border border-border bg-card p-3 sm:p-3.5">
+                <div className="mb-2 flex items-center justify-between">
                   <p className="font-semibold">{stat.deal}</p>
                   <Badge variant="outline">{stat.revenueShare}% Rev Share</Badge>
                 </div>
-                <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="grid grid-cols-2 gap-x-3 gap-y-2 text-sm sm:gap-4">
                   <div>
                     <p className="text-xs text-muted-foreground">Total Received</p>
-                    <p className="font-semibold text-green-600">
+                    <p className="font-semibold text-chart-1">
                       <CurrencyDisplay amount={stat.totalDistributions} />
                     </p>
                   </div>
@@ -128,7 +142,7 @@ export default function InvestorDistributionsPage() {
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">ROI</p>
-                    <p className="font-semibold text-green-600">
+                    <p className="font-semibold text-chart-1">
                       {((stat.totalDistributions / stat.totalInvested) * 100).toFixed(1)}%
                     </p>
                   </div>
@@ -140,8 +154,13 @@ export default function InvestorDistributionsPage() {
       </Card>
 
       {/* Distribution History */}
-      <Card className="border border-border">
-        <CardHeader className="flex flex-row items-center justify-between">
+      <Card className={investorCardClass()}>
+        <CardHeader
+          className={cn(
+            'flex flex-row flex-wrap items-center justify-between gap-3',
+            investorDensity.cardHeader,
+          )}
+        >
           <div>
             <CardTitle className="text-base">Distribution History</CardTitle>
             <CardDescription>All payments received to your wallet</CardDescription>
@@ -163,39 +182,53 @@ export default function InvestorDistributionsPage() {
             </Button>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className={investorDensity.cardContentSection}>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="border-b border-border">
                 <tr>
-                  <th className="text-left py-3 px-4 font-semibold">Deal</th>
-                  <th className="text-left py-3 px-4 font-semibold">Type</th>
-                  <th className="text-left py-3 px-4 font-semibold">Per Unit</th>
-                  <th className="text-left py-3 px-4 font-semibold">Amount</th>
-                  <th className="text-left py-3 px-4 font-semibold">Status</th>
-                  <th className="text-left py-3 px-4 font-semibold">Date</th>
-                  <th className="text-left py-3 px-4 font-semibold">TX</th>
+                  <th className={`text-left font-semibold ${investorDensity.tableHead}`}>
+                    Deal
+                  </th>
+                  <th className={`text-left font-semibold ${investorDensity.tableHead}`}>
+                    Type
+                  </th>
+                  <th className={`text-left font-semibold ${investorDensity.tableHead}`}>
+                    Per Unit
+                  </th>
+                  <th className={`text-left font-semibold ${investorDensity.tableHead}`}>
+                    Amount
+                  </th>
+                  <th className={`text-left font-semibold ${investorDensity.tableHead}`}>
+                    Status
+                  </th>
+                  <th className={`text-left font-semibold ${investorDensity.tableHead}`}>
+                    Date
+                  </th>
+                  <th className={`text-left font-semibold ${investorDensity.tableHead}`}>
+                    TX
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {filteredDistributions.map((dist) => (
-                  <tr key={dist.id} className="border-b border-border/50 hover:bg-card transition-colors">
-                    <td className="py-4 px-4 font-semibold">{dist.deal}</td>
-                    <td className="py-4 px-4 text-muted-foreground">{dist.type}</td>
-                    <td className="py-4 px-4"><CurrencyDisplay amount={dist.perUnit} /></td>
-                    <td className="py-4 px-4">
-                      <span className="font-semibold text-green-600 dark:text-green-400 flex items-center gap-1">
-                        <ArrowUpRight className="size-3" />
+                  <tr key={dist.id} className="border-b border-border/50 transition-colors hover:bg-card">
+                    <td className={`font-semibold ${investorDensity.tableCell}`}>{dist.deal}</td>
+                    <td className={`text-muted-foreground ${investorDensity.tableCell}`}>{dist.type}</td>
+                    <td className={investorDensity.tableCell}><CurrencyDisplay amount={dist.perUnit} /></td>
+                    <td className={investorDensity.tableCell}>
+                      <span className="flex items-center gap-1 font-semibold text-chart-1">
+                        <ArrowUpRight className="size-3 shrink-0" />
                         +<CurrencyDisplay amount={dist.amount} />
                       </span>
                     </td>
-                    <td className="py-4 px-4">
-                      <Badge className="bg-green-600">Received</Badge>
+                    <td className={investorDensity.tableCell}>
+                      <Badge variant="default">Received</Badge>
                     </td>
-                    <td className="py-4 px-4 text-muted-foreground">
+                    <td className={`text-muted-foreground ${investorDensity.tableCell}`}>
                       <DateDisplay date={dist.date} />
                     </td>
-                    <td className="py-4 px-4">
+                    <td className={investorDensity.tableCell}>
                       <div className="flex items-center gap-2">
                         <code className="text-xs bg-muted px-2 py-1 rounded truncate max-w-[100px]">
                           {dist.txHash}
@@ -214,14 +247,14 @@ export default function InvestorDistributionsPage() {
       </Card>
 
       {/* Tax Summary */}
-      <Card className="border border-border">
-        <CardHeader>
+      <Card className={investorCardClass()}>
+        <CardHeader className={investorDensity.cardHeader}>
           <CardTitle className="text-base">Tax Year Summary</CardTitle>
           <CardDescription>Distribution totals for tax reporting</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 bg-card rounded-lg border border-border">
+        <CardContent className={investorDensity.cardContentSection}>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-4">
+            <div className="rounded-lg border border-border bg-card p-3 sm:p-3.5">
               <p className="text-xs text-muted-foreground mb-1">Tax Year 2026 (YTD)</p>
               <p className="text-xl font-bold">
                 <CurrencyDisplay amount={distributions.filter(d => d.date.startsWith('2026')).reduce((sum, d) => sum + d.amount, 0)} />
@@ -230,7 +263,7 @@ export default function InvestorDistributionsPage() {
                 {distributions.filter(d => d.date.startsWith('2026')).length} distributions
               </p>
             </div>
-            <div className="p-4 bg-card rounded-lg border border-border">
+            <div className="rounded-lg border border-border bg-card p-3 sm:p-3.5">
               <p className="text-xs text-muted-foreground mb-1">Tax Year 2025</p>
               <p className="text-xl font-bold">
                 <CurrencyDisplay amount={distributions.filter(d => d.date.startsWith('2025')).reduce((sum, d) => sum + d.amount, 0)} />
@@ -239,7 +272,7 @@ export default function InvestorDistributionsPage() {
                 {distributions.filter(d => d.date.startsWith('2025')).length} distributions
               </p>
             </div>
-            <div className="p-4 bg-card rounded-lg border border-border flex items-center justify-center">
+            <div className="flex items-center justify-center rounded-lg border border-border bg-card p-3 sm:p-3.5">
               <Button variant="outline" asChild>
                 <a href="/investor/documents">
                   <FileText className="size-4 mr-2" />

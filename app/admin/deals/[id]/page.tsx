@@ -15,8 +15,10 @@ import { StatusBadge } from '@/components/shared/status-badge';
 import { DealFormEnhanced } from '@/components/admin/deal-form-enhanced';
 import {
   ArrowLeft, Edit, Archive, DollarSign, Users, TrendingUp, Coins,
-  Calendar, FileText, Building, Settings, Eye, Upload, Download, Send
+  FileText, Upload, Download, Send
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { adminDensity, adminCardClass } from '@/components/admin/admin-density';
 
 const dealData = {
   id: 1,
@@ -97,9 +99,9 @@ export default function DealDetailPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className={adminDensity.page}>
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-4">
           <Button variant="ghost" size="icon" onClick={() => router.push('/admin/deals')}>
             <ArrowLeft className="size-4" />
@@ -125,9 +127,9 @@ export default function DealDetailPage() {
       </div>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="border border-border">
-          <CardContent className="pt-4">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+        <Card className={adminCardClass()}>
+          <CardContent className={cn('pt-3', adminDensity.cardContent)}>
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <DollarSign className="size-4" />
               <span className="text-xs font-medium">Raised</span>
@@ -140,8 +142,8 @@ export default function DealDetailPage() {
           </CardContent>
         </Card>
 
-        <Card className="border border-border">
-          <CardContent className="pt-4">
+        <Card className={adminCardClass()}>
+          <CardContent className={cn('pt-3', adminDensity.cardContent)}>
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <Users className="size-4" />
               <span className="text-xs font-medium">Investors</span>
@@ -151,8 +153,8 @@ export default function DealDetailPage() {
           </CardContent>
         </Card>
 
-        <Card className="border border-border">
-          <CardContent className="pt-4">
+        <Card className={adminCardClass()}>
+          <CardContent className={cn('pt-3', adminDensity.cardContent)}>
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <Coins className="size-4" />
               <span className="text-xs font-medium">Tokens Issued</span>
@@ -163,8 +165,8 @@ export default function DealDetailPage() {
           </CardContent>
         </Card>
 
-        <Card className="border border-border">
-          <CardContent className="pt-4">
+        <Card className={adminCardClass()}>
+          <CardContent className={cn('pt-3', adminDensity.cardContent)}>
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
               <TrendingUp className="size-4" />
               <span className="text-xs font-medium">Valuation</span>
@@ -187,18 +189,18 @@ export default function DealDetailPage() {
           <TabsTrigger value="distributions">Distributions</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="border border-border">
-              <CardHeader>
+        <TabsContent value="overview" className="mt-3">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
+            <Card className={adminCardClass()}>
+              <CardHeader className={adminDensity.cardHeader}>
                 <CardTitle className="text-base">Deal Details</CardTitle>
               </CardHeader>
-              <CardContent className="flex flex-col gap-4">
+              <CardContent className={cn('flex flex-col gap-3', adminDensity.cardContent)}>
                 <div>
                   <p className="text-xs text-muted-foreground mb-1">Description</p>
                   <p className="text-sm">{deal.description}</p>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <p className="text-xs text-muted-foreground mb-1">Token</p>
                     <p className="text-sm font-medium">{deal.token_name} ({deal.token_symbol})</p>
@@ -219,12 +221,12 @@ export default function DealDetailPage() {
               </CardContent>
             </Card>
 
-            <Card className="border border-border">
-              <CardHeader>
+            <Card className={adminCardClass()}>
+              <CardHeader className={adminDensity.cardHeader}>
                 <CardTitle className="text-base">Valuation & Timeline</CardTitle>
               </CardHeader>
-              <CardContent className="flex flex-col gap-4">
-                <div className="grid grid-cols-2 gap-4">
+              <CardContent className={cn('flex flex-col gap-3', adminDensity.cardContent)}>
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <p className="text-xs text-muted-foreground mb-1">StreamScore Valuation</p>
                     <p className="text-sm font-medium"><CurrencyDisplay amount={deal.streamscore_valuation} /></p>
@@ -257,13 +259,13 @@ export default function DealDetailPage() {
           </div>
         </TabsContent>
 
-        <TabsContent value="fundraising" className="mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card className="border border-border lg:col-span-2">
-              <CardHeader>
+        <TabsContent value="fundraising" className="mt-3">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-5">
+            <Card className={cn('border border-border lg:col-span-2', adminCardClass())}>
+              <CardHeader className={adminDensity.cardHeader}>
                 <CardTitle className="text-base">Fundraising Progress</CardTitle>
               </CardHeader>
-              <CardContent className="flex flex-col gap-6">
+              <CardContent className={cn('flex flex-col gap-4', adminDensity.cardContent)}>
                 <div>
                   <div className="flex justify-between mb-2">
                     <span className="text-sm font-medium">Raised vs Target</span>
@@ -276,7 +278,7 @@ export default function DealDetailPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 p-4 bg-card rounded-lg">
+                <div className="grid grid-cols-2 gap-3 rounded-lg bg-card p-3">
                   <div>
                     <p className="text-xs text-muted-foreground">Committed Capital</p>
                     <p className="text-lg font-bold"><CurrencyDisplay amount={deal.committed_amount} /></p>
@@ -297,11 +299,11 @@ export default function DealDetailPage() {
               </CardContent>
             </Card>
 
-            <Card className="border border-border">
-              <CardHeader>
+            <Card className={adminCardClass()}>
+              <CardHeader className={adminDensity.cardHeader}>
                 <CardTitle className="text-base">Token Status</CardTitle>
               </CardHeader>
-              <CardContent className="flex flex-col gap-4">
+              <CardContent className={cn('flex flex-col gap-3', adminDensity.cardContent)}>
                 <div>
                   <div className="flex justify-between mb-2">
                     <span className="text-sm font-medium">Tokens Issued</span>
@@ -328,46 +330,46 @@ export default function DealDetailPage() {
           </div>
         </TabsContent>
 
-        <TabsContent value="investors" className="mt-6">
-          <Card className="border border-border">
-            <CardHeader>
+        <TabsContent value="investors" className="mt-3">
+          <Card className={adminCardClass()}>
+            <CardHeader className={adminDensity.cardHeader}>
               <CardTitle className="text-base">Investor Participation</CardTitle>
               <CardDescription>{investors.length} investors in this deal</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="border-b border-border">
                     <tr>
-                      <th className="text-left py-3 px-4 font-semibold">Investor</th>
-                      <th className="text-left py-3 px-4 font-semibold">Email</th>
-                      <th className="text-left py-3 px-4 font-semibold">Amount</th>
-                      <th className="text-left py-3 px-4 font-semibold">Units</th>
-                      <th className="text-left py-3 px-4 font-semibold">Status</th>
-                      <th className="text-left py-3 px-4 font-semibold">Tokens Issued</th>
-                      <th className="text-left py-3 px-4 font-semibold">Actions</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Investor</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Email</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Amount</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Units</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Status</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Tokens Issued</th>
+                      <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {investors.map((investor) => (
                       <tr key={investor.id} className="border-b border-border/50 hover:bg-card">
-                        <td className="py-4 px-4 font-medium">{investor.name}</td>
-                        <td className="py-4 px-4 text-muted-foreground">{investor.email}</td>
-                        <td className="py-4 px-4"><CurrencyDisplay amount={investor.amount} /></td>
-                        <td className="py-4 px-4">{investor.units.toLocaleString()}</td>
-                        <td className="py-4 px-4">
+                        <td className={cn('font-medium', adminDensity.tableCell)}>{investor.name}</td>
+                        <td className={cn('text-muted-foreground', adminDensity.tableCell)}>{investor.email}</td>
+                        <td className={adminDensity.tableCell}><CurrencyDisplay amount={investor.amount} /></td>
+                        <td className={adminDensity.tableCell}>{investor.units.toLocaleString()}</td>
+                        <td className={adminDensity.tableCell}>
                           <Badge variant={investor.status === 'funded' ? 'default' : 'secondary'}>
                             {investor.status}
                           </Badge>
                         </td>
-                        <td className="py-4 px-4">
+                        <td className={adminDensity.tableCell}>
                           {investor.tokens_issued ? (
-                            <Badge className="bg-green-600">Issued</Badge>
+                            <Badge variant="default">Issued</Badge>
                           ) : (
                             <Badge variant="outline">Pending</Badge>
                           )}
                         </td>
-                        <td className="py-4 px-4">
+                        <td className={adminDensity.tableCell}>
                           <Button variant="ghost" size="sm">View</Button>
                         </td>
                       </tr>
@@ -379,22 +381,22 @@ export default function DealDetailPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="documents" className="mt-6">
-          <Card className="border border-border">
-            <CardHeader className="flex flex-row items-center justify-between">
+        <TabsContent value="documents" className="mt-3">
+          <Card className={adminCardClass()}>
+            <CardHeader className={cn('flex flex-row items-center justify-between', adminDensity.cardHeader)}>
               <div>
                 <CardTitle className="text-base">Deal Documents</CardTitle>
                 <CardDescription>Upload and manage deal-related files</CardDescription>
               </div>
               <Button size="sm">
-                <Upload className="size-4 mr-2" />
+                <Upload className="mr-2 size-4" />
                 Upload
               </Button>
             </CardHeader>
-            <CardContent>
-              <div className="flex flex-col gap-3">
+            <CardContent className={adminDensity.cardContent}>
+              <div className="flex flex-col gap-2">
                 {documents.map((doc) => (
-                  <div key={doc.id} className="flex items-center justify-between p-3 bg-card rounded-lg border border-border">
+                  <div key={doc.id} className="flex items-center justify-between rounded-lg border border-border bg-card p-2.5">
                     <div className="flex items-center gap-3">
                       <FileText className="size-5 text-muted-foreground" />
                       <div>
@@ -412,21 +414,21 @@ export default function DealDetailPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="distributions" className="mt-6">
-          <Card className="border border-border">
-            <CardHeader className="flex flex-row items-center justify-between">
+        <TabsContent value="distributions" className="mt-3">
+          <Card className={adminCardClass()}>
+            <CardHeader className={cn('flex flex-row items-center justify-between', adminDensity.cardHeader)}>
               <div>
                 <CardTitle className="text-base">Distribution History</CardTitle>
                 <CardDescription>Revenue distributions to investors</CardDescription>
               </div>
               <Button size="sm">
-                <Send className="size-4 mr-2" />
+                <Send className="mr-2 size-4" />
                 New Distribution
               </Button>
             </CardHeader>
-            <CardContent>
+            <CardContent className={distributions.length === 0 ? adminDensity.cardContent : 'p-0'}>
               {distributions.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
+                <div className="py-6 text-center text-muted-foreground">
                   <p>No distributions yet</p>
                 </div>
               ) : (
@@ -434,22 +436,22 @@ export default function DealDetailPage() {
                   <table className="w-full text-sm">
                     <thead className="border-b border-border">
                       <tr>
-                        <th className="text-left py-3 px-4 font-semibold">Date</th>
-                        <th className="text-left py-3 px-4 font-semibold">Total Amount</th>
-                        <th className="text-left py-3 px-4 font-semibold">Per Unit</th>
-                        <th className="text-left py-3 px-4 font-semibold">Investors Paid</th>
-                        <th className="text-left py-3 px-4 font-semibold">Status</th>
+                        <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Date</th>
+                        <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Total Amount</th>
+                        <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Per Unit</th>
+                        <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Investors Paid</th>
+                        <th className={cn('text-left font-semibold', adminDensity.tableHead)}>Status</th>
                       </tr>
                     </thead>
                     <tbody>
                       {distributions.map((dist) => (
                         <tr key={dist.id} className="border-b border-border/50">
-                          <td className="py-4 px-4"><DateDisplay date={dist.date} /></td>
-                          <td className="py-4 px-4 font-medium"><CurrencyDisplay amount={dist.amount} /></td>
-                          <td className="py-4 px-4"><CurrencyDisplay amount={dist.per_unit} /></td>
-                          <td className="py-4 px-4">{dist.investors_paid}</td>
-                          <td className="py-4 px-4">
-                            <Badge className="bg-green-600">Completed</Badge>
+                          <td className={adminDensity.tableCell}><DateDisplay date={dist.date} /></td>
+                          <td className={cn('font-medium', adminDensity.tableCell)}><CurrencyDisplay amount={dist.amount} /></td>
+                          <td className={adminDensity.tableCell}><CurrencyDisplay amount={dist.per_unit} /></td>
+                          <td className={adminDensity.tableCell}>{dist.investors_paid}</td>
+                          <td className={adminDensity.tableCell}>
+                            <Badge variant="default">Completed</Badge>
                           </td>
                         </tr>
                       ))}
@@ -485,11 +487,11 @@ export default function DealDetailPage() {
         subtitle="This will close the deal and prevent further investments"
         size="sm"
       >
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           <p className="text-sm text-muted-foreground">
             Are you sure you want to archive "{deal.title}"? This action cannot be undone easily.
           </p>
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <Button variant="destructive" onClick={handleArchive}>Archive Deal</Button>
             <Button variant="outline" onClick={() => setIsArchiving(false)}>Cancel</Button>
           </div>

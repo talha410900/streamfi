@@ -25,7 +25,9 @@ export default function SignupPage() {
             <div className="size-12 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
               <Film className="size-6 text-primary-foreground" />
             </div>
-            <span className="text-2xl font-bold text-foreground">StreamFi</span>
+            <span className="text-2xl font-bold text-foreground">
+              StreamFi Ventures
+            </span>
           </div>
 
           <div className="flex flex-col gap-6 max-w-lg">

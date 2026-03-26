@@ -11,6 +11,12 @@ import {
   Download, FileText, FileCheck, FileSignature, Receipt,
   FileSearch, Search, Filter, ExternalLink, AlertCircle
 } from 'lucide-react';
+import { DashboardPageHeader } from '@/components/shared/dashboard-page-header';
+import { cn } from '@/lib/utils';
+import {
+  investorDensity,
+  investorCardClass,
+} from '@/components/investor/investor-density';
 
 const documents = {
   signed: [
@@ -59,7 +65,7 @@ function getStatusBadge(status: string) {
     case 'signed':
     case 'complete':
     case 'verified':
-      return <Badge className="bg-green-600">Complete</Badge>;
+      return <Badge variant="default">Complete</Badge>;
     case 'available':
       return <Badge variant="secondary">Available</Badge>;
     case 'pending':
@@ -79,15 +85,14 @@ export default function InvestorDocumentsPage() {
   });
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Documents</h1>
-        <p className="text-muted-foreground mt-1">Access your signed documents, KYC files, and tax statements</p>
-      </div>
+    <div className={investorDensity.page}>
+      <DashboardPageHeader
+        title="Documents"
+        description="Subscriptions, KYC, questionnaires, valuations, and K-1s in one library."
+      />
 
-      {/* Search */}
-      <Card className="border border-border">
-        <CardContent className="pt-4">
+      <Card className={investorCardClass()}>
+        <CardContent className={cn('py-3', investorDensity.cardContent)}>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
             <Input
@@ -110,16 +115,16 @@ export default function InvestorDocumentsPage() {
           <TabsTrigger value="valuations">Valuations</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="all" className="mt-6">
-          <Card className="border border-border">
-            <CardHeader>
+        <TabsContent value="all" className="mt-4">
+          <Card className={investorCardClass()}>
+            <CardHeader className={investorDensity.cardHeader}>
               <CardTitle className="text-base">All Documents</CardTitle>
               <CardDescription>{filteredDocuments.length} documents on file</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="flex flex-col gap-2">
+            <CardContent className={investorDensity.cardContentSection}>
+              <div className="flex flex-col gap-1.5">
                 {filteredDocuments.map((doc) => (
-                  <div key={doc.id} className="flex items-center justify-between p-4 bg-card rounded-lg hover:bg-muted transition-colors">
+                  <div key={doc.id} className="flex items-center justify-between rounded-lg bg-card p-3 transition-colors hover:bg-muted sm:p-3.5">
                     <div className="flex items-center gap-3">
                       <div className="size-10 rounded-lg bg-background flex items-center justify-center">
                         {getTypeIcon(doc.type)}
@@ -146,16 +151,16 @@ export default function InvestorDocumentsPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="agreements" className="mt-6">
-          <Card className="border border-border">
-            <CardHeader>
+        <TabsContent value="agreements" className="mt-4">
+          <Card className={investorCardClass()}>
+            <CardHeader className={investorDensity.cardHeader}>
               <CardTitle className="text-base">Subscription Agreements</CardTitle>
               <CardDescription>Your signed investment agreements</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="flex flex-col gap-2">
+            <CardContent className={investorDensity.cardContentSection}>
+              <div className="flex flex-col gap-1.5">
                 {documents.signed.map((doc) => (
-                  <div key={doc.id} className="flex items-center justify-between p-4 bg-card rounded-lg">
+                  <div key={doc.id} className="flex items-center justify-between rounded-lg bg-card p-3 sm:p-3.5">
                     <div className="flex items-center gap-3">
                       {getTypeIcon(doc.type)}
                       <div>
@@ -176,16 +181,16 @@ export default function InvestorDocumentsPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="kyc" className="mt-6">
-          <Card className="border border-border">
-            <CardHeader>
+        <TabsContent value="kyc" className="mt-4">
+          <Card className={investorCardClass()}>
+            <CardHeader className={investorDensity.cardHeader}>
               <CardTitle className="text-base">KYC & Verification</CardTitle>
               <CardDescription>Identity and accreditation documents</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="flex flex-col gap-2">
+            <CardContent className={investorDensity.cardContentSection}>
+              <div className="flex flex-col gap-1.5">
                 {[...documents.kyc, ...documents.questionnaires].map((doc) => (
-                  <div key={doc.id} className="flex items-center justify-between p-4 bg-card rounded-lg">
+                  <div key={doc.id} className="flex items-center justify-between rounded-lg bg-card p-3 sm:p-3.5">
                     <div className="flex items-center gap-3">
                       {getTypeIcon(doc.type)}
                       <div>
@@ -206,14 +211,14 @@ export default function InvestorDocumentsPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="tax" className="mt-6">
-          <Card className="border border-border">
-            <CardHeader>
+        <TabsContent value="tax" className="mt-4">
+          <Card className={investorCardClass()}>
+            <CardHeader className={investorDensity.cardHeader}>
               <CardTitle className="text-base">Tax Documents</CardTitle>
               <CardDescription>K-1 statements for tax filing</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="p-4 bg-yellow-50 dark:bg-yellow-950/30 rounded-lg border border-yellow-200 dark:border-yellow-900 mb-4">
+            <CardContent className={investorDensity.cardContentSection}>
+              <div className="mb-3 rounded-lg border border-yellow-200 bg-yellow-50 p-3 dark:border-yellow-900 dark:bg-yellow-950/30 sm:p-3.5">
                 <div className="flex gap-2">
                   <AlertCircle className="size-5 text-yellow-600 flex-shrink-0" />
                   <div>
@@ -224,9 +229,9 @@ export default function InvestorDocumentsPage() {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1.5">
                 {documents.tax.map((doc) => (
-                  <div key={doc.id} className="flex items-center justify-between p-4 bg-card rounded-lg">
+                  <div key={doc.id} className="flex items-center justify-between rounded-lg bg-card p-3 sm:p-3.5">
                     <div className="flex items-center gap-3">
                       {getTypeIcon(doc.type)}
                       <div>
@@ -247,16 +252,16 @@ export default function InvestorDocumentsPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="valuations" className="mt-6">
-          <Card className="border border-border">
-            <CardHeader>
+        <TabsContent value="valuations" className="mt-4">
+          <Card className={investorCardClass()}>
+            <CardHeader className={investorDensity.cardHeader}>
               <CardTitle className="text-base">Valuation Reports</CardTitle>
               <CardDescription>Deal valuation materials</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="flex flex-col gap-2">
+            <CardContent className={investorDensity.cardContentSection}>
+              <div className="flex flex-col gap-1.5">
                 {documents.valuations.map((doc) => (
-                  <div key={doc.id} className="flex items-center justify-between p-4 bg-card rounded-lg">
+                  <div key={doc.id} className="flex items-center justify-between rounded-lg bg-card p-3 sm:p-3.5">
                     <div className="flex items-center gap-3">
                       {getTypeIcon(doc.type)}
                       <div>

@@ -1,4 +1,7 @@
-// Constants for StreamFi platform
+// Constants for the StreamFi Ventures platform
+
+/** Display name of the product / company */
+export const BRAND_NAME = 'StreamFi Ventures';
 
 export const DEAL_STATUS_OPTIONS = [
   { value: 'draft', label: 'Draft', color: 'gray' },

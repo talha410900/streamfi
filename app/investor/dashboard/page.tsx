@@ -3,17 +3,35 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CurrencyDisplay } from '@/components/shared/currency-display';
 import { DateDisplay } from '@/components/shared/date-display';
+import { DashboardPageHeader } from '@/components/shared/dashboard-page-header';
 import {
-  TrendingUp, DollarSign, Wallet, ArrowRight, Coins, Percent,
-  Film, ArrowUpRight, FileText, Bell, ExternalLink
+  investorDensity,
+  investorCardClass,
+} from '@/components/investor/investor-density';
+import {
+  TrendingUp,
+  DollarSign,
+  Wallet,
+  ArrowRight,
+  Coins,
+  ArrowUpRight,
+  Film,
+  FileText,
+  Bell,
 } from 'lucide-react';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
-function StatCard({ title, value, icon, description, trend }: {
+function StatCard({
+  title,
+  value,
+  icon,
+  description,
+  trend,
+}: {
   title: string;
   value: string | React.ReactNode;
   icon: React.ReactNode;
@@ -21,21 +39,28 @@ function StatCard({ title, value, icon, description, trend }: {
   trend?: { value: number; label: string };
 }) {
   return (
-    <Card className="border border-border">
-      <CardContent className="pt-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-muted-foreground">{title}</span>
-          <div className="text-primary">{icon}</div>
-        </div>
-        <p className="text-2xl font-bold tracking-tight">{value}</p>
-        {trend && (
-          <div className="flex items-center gap-1 mt-1">
-            <ArrowUpRight className="size-3 text-green-600" />
-            <span className="text-xs text-green-600">+{trend.value}%</span>
-            <span className="text-xs text-muted-foreground">{trend.label}</span>
-          </div>
+    <Card className={investorCardClass()}>
+      <CardContent
+        className={cn(
+          'flex flex-col gap-2 pt-4',
+          investorDensity.cardContent,
         )}
-        {description && <p className="text-xs text-muted-foreground mt-1">{description}</p>}
+      >
+        <div className="flex items-start justify-between gap-2">
+          <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            {title}
+          </span>
+          <div className="text-muted-foreground">{icon}</div>
+        </div>
+        <p className="text-2xl font-semibold tracking-tight tabular-nums">{value}</p>
+        {trend ? (
+          <div className="flex flex-wrap items-center gap-1 text-xs text-chart-1">
+            <ArrowUpRight className="size-3 shrink-0" />
+            <span>+{trend.value}%</span>
+            <span className="text-muted-foreground">{trend.label}</span>
+          </div>
+        ) : null}
+        {description ? <p className="text-xs text-muted-foreground">{description}</p> : null}
       </CardContent>
     </Card>
   );
@@ -47,10 +72,6 @@ const portfolioData = {
   totalTokens: 45000,
   activeDeals: 2,
   totalDistributions: 4300,
-  revenueShare: {
-    midnightHeist: 15,
-    lastDance: 12,
-  },
 };
 
 const investments = [
@@ -61,7 +82,6 @@ const investments = [
     tokens: 5000,
     tokenSymbol: 'MHT',
     revenueShare: 15,
-    valuation: 5000000,
     productionStatus: 'pre_production',
     distributionStatus: 'pending',
     distributions: 2500,
@@ -75,7 +95,6 @@ const investments = [
     tokens: 1500,
     tokenSymbol: 'LD',
     revenueShare: 12,
-    valuation: 8000000,
     productionStatus: 'production',
     distributionStatus: 'active',
     distributions: 1800,
@@ -90,81 +109,91 @@ const recentDistributions = [
 ];
 
 const upcomingEvents = [
-  { id: 1, type: 'distribution', title: 'Midnight Heist Q1 Distribution', date: '2026-04-01' },
-  { id: 2, type: 'milestone', title: 'Last Dance - Production Wrap', date: '2026-04-15' },
-  { id: 3, type: 'deadline', title: 'K-1 Tax Document Available', date: '2026-03-31' },
+  { id: 1, type: 'distribution' as const, title: 'Midnight Heist Q1 distribution', date: '2026-04-01' },
+  { id: 2, type: 'milestone' as const, title: 'Last Dance — production wrap', date: '2026-04-15' },
+  { id: 3, type: 'deadline' as const, title: 'K-1 available', date: '2026-03-31' },
 ];
+
+const eventDot: Record<(typeof upcomingEvents)[number]['type'], string> = {
+  distribution: 'bg-chart-1',
+  milestone: 'bg-chart-2',
+  deadline: 'bg-chart-3',
+};
 
 export default function InvestorDashboardPage() {
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Portfolio Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Track your investments, tokens, and distributions</p>
-        </div>
-        <Button variant="outline" size="sm">
-          <Bell className="size-4 mr-2" />
-          Notifications
-        </Button>
-      </div>
+    <div className={investorDensity.page}>
+      <DashboardPageHeader
+        title="Portfolio"
+        description="Investments, token positions, and cash distributions."
+        actions={
+          <Button variant="outline" size="sm">
+            <Bell data-icon="inline-start" />
+            Notifications
+          </Button>
+        }
+      />
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 lg:grid-cols-4">
         <StatCard
-          title="Portfolio Value"
+          title="Portfolio value"
           value={<CurrencyDisplay amount={portfolioData.totalValue} />}
-          icon={<DollarSign className="size-4" />}
+          icon={<DollarSign />}
           trend={{ value: 8.5, label: 'from distributions' }}
         />
         <StatCard
-          title="Total Invested"
+          title="Capital deployed"
           value={<CurrencyDisplay amount={portfolioData.totalInvested} />}
-          icon={<TrendingUp className="size-4" />}
+          icon={<TrendingUp />}
           description={`${portfolioData.activeDeals} active deals`}
         />
         <StatCard
-          title="Token Holdings"
+          title="Token holdings"
           value={portfolioData.totalTokens.toLocaleString()}
-          icon={<Coins className="size-4" />}
-          description="Across all investments"
+          icon={<Coins />}
+          description="Units across deals"
         />
         <StatCard
-          title="Total Distributions"
+          title="Distributions"
           value={<CurrencyDisplay amount={portfolioData.totalDistributions} />}
-          icon={<ArrowUpRight className="size-4" />}
-          description="Lifetime earnings"
+          icon={<ArrowUpRight />}
+          description="Lifetime paid"
         />
       </div>
 
-      {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Portfolio */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-5">
         <div className="lg:col-span-2">
           <Tabs defaultValue="investments" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="investments">My Investments</TabsTrigger>
-              <TabsTrigger value="tokens">Token Holdings</TabsTrigger>
+            <TabsList className="grid h-9 w-full max-w-md grid-cols-2">
+              <TabsTrigger value="investments">Investments</TabsTrigger>
+              <TabsTrigger value="tokens">Tokens</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="investments" className="mt-4">
-              <Card className="border border-border">
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <div>
-                    <CardTitle className="text-base">Active Investments</CardTitle>
-                    <CardDescription>Your positions in streaming content</CardDescription>
+            <TabsContent value="investments" className="mt-3">
+              <Card className={investorCardClass()}>
+                <CardHeader
+                  className={`flex flex-row flex-wrap items-start justify-between gap-3 border-b border-border ${investorDensity.cardHeader}`}
+                >
+                  <div className="flex flex-col gap-1">
+                    <CardTitle className="text-base font-semibold">Positions</CardTitle>
+                    <CardDescription>Revenue participation by show</CardDescription>
                   </div>
                   <Link href="/investor/investments">
-                    <Button variant="outline" size="sm">View All</Button>
+                    <Button variant="outline" size="sm">
+                      View all
+                    </Button>
                   </Link>
                 </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col gap-4">
+                <CardContent className={investorDensity.cardContentSection}>
+                  <div className="flex flex-col gap-3">
                     {investments.map((inv) => (
-                      <div key={inv.id} className="p-4 bg-card rounded-lg border border-border">
-                        <div className="flex items-start justify-between mb-3">
-                          <div>
-                            <p className="font-semibold">{inv.deal}</p>
+                      <div
+                        key={inv.id}
+                        className="rounded-lg border border-border bg-card p-3 sm:p-3.5"
+                      >
+                        <div className="mb-2 flex flex-wrap items-start justify-between gap-2">
+                          <div className="flex flex-col gap-0.5">
+                            <p className="font-medium">{inv.deal}</p>
                             <p className="text-xs text-muted-foreground">
                               Invested <DateDisplay date={inv.investedDate} />
                             </p>
@@ -173,32 +202,41 @@ export default function InvestorDashboardPage() {
                             {inv.progress === 100 ? 'Funded' : 'Active'}
                           </Badge>
                         </div>
-                        <div className="grid grid-cols-4 gap-4 text-sm">
-                          <div>
-                            <p className="text-xs text-muted-foreground">Amount</p>
-                            <p className="font-semibold"><CurrencyDisplay amount={inv.amount} /></p>
+                        <div className="grid grid-cols-2 gap-x-3 gap-y-2 text-sm sm:grid-cols-4 sm:gap-x-4">
+                          <div className="flex flex-col gap-0.5">
+                            <p className="text-xs text-muted-foreground">Invested</p>
+                            <p className="font-medium tabular-nums">
+                              <CurrencyDisplay amount={inv.amount} />
+                            </p>
                           </div>
-                          <div>
+                          <div className="flex flex-col gap-0.5">
                             <p className="text-xs text-muted-foreground">Tokens</p>
-                            <p className="font-semibold">{inv.tokens.toLocaleString()} {inv.tokenSymbol}</p>
+                            <p className="font-medium tabular-nums">
+                              {inv.tokens.toLocaleString()} {inv.tokenSymbol}
+                            </p>
                           </div>
-                          <div>
-                            <p className="text-xs text-muted-foreground">Revenue Share</p>
-                            <p className="font-semibold">{inv.revenueShare}%</p>
+                          <div className="flex flex-col gap-0.5">
+                            <p className="text-xs text-muted-foreground">Rev share</p>
+                            <p className="font-medium tabular-nums">{inv.revenueShare}%</p>
                           </div>
-                          <div>
-                            <p className="text-xs text-muted-foreground">Distributions</p>
-                            <p className="font-semibold text-green-600"><CurrencyDisplay amount={inv.distributions} /></p>
+                          <div className="flex flex-col gap-0.5">
+                            <p className="text-xs text-muted-foreground">Paid</p>
+                            <p className="font-medium tabular-nums text-chart-1">
+                              <CurrencyDisplay amount={inv.distributions} />
+                            </p>
                           </div>
                         </div>
-                        <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
+                        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3">
                           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <Film className="size-3" />
-                            <span>Production: {inv.productionStatus.replace('_', ' ')}</span>
+                            <Film className="size-3 shrink-0" />
+                            <span className="capitalize">
+                              {inv.productionStatus.replace('_', ' ')}
+                            </span>
                           </div>
-                          <Link href={`/investor/investments/${inv.id}`}>
-                            <Button variant="ghost" size="sm" className="h-7 text-xs">
-                              View Details <ArrowRight className="size-3 ml-1" />
+                          <Link href="/investor/investments">
+                            <Button variant="ghost" size="sm" className="h-8 text-xs">
+                              Details
+                              <ArrowRight data-icon="inline-end" />
                             </Button>
                           </Link>
                         </div>
@@ -209,28 +247,35 @@ export default function InvestorDashboardPage() {
               </Card>
             </TabsContent>
 
-            <TabsContent value="tokens" className="mt-4">
-              <Card className="border border-border">
-                <CardHeader>
-                  <CardTitle className="text-base">Token Holdings by Deal</CardTitle>
-                  <CardDescription>Your digital tokens representing investment units</CardDescription>
+            <TabsContent value="tokens" className="mt-3">
+              <Card className={investorCardClass()}>
+                <CardHeader
+                  className={`border-b border-border ${investorDensity.cardHeader}`}
+                >
+                  <CardTitle className="text-base font-semibold">By deal</CardTitle>
+                  <CardDescription>SPL tokens linked to your wallet</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col gap-3">
+                <CardContent className={investorDensity.cardContentSection}>
+                  <div className="flex flex-col gap-2">
                     {investments.map((inv) => (
-                      <div key={inv.id} className="flex items-center justify-between p-3 bg-card rounded-lg">
+                      <div
+                        key={inv.id}
+                        className="flex items-center justify-between rounded-lg border border-border px-3 py-2.5"
+                      >
                         <div className="flex items-center gap-3">
-                          <div className="size-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                            <Coins className="size-5 text-primary" />
+                          <div className="flex size-9 items-center justify-center rounded-md bg-muted">
+                            <Coins className="size-4 text-muted-foreground" />
                           </div>
-                          <div>
-                            <p className="font-semibold">{inv.tokenSymbol}</p>
+                          <div className="flex flex-col gap-0.5">
+                            <p className="text-sm font-medium">{inv.tokenSymbol}</p>
                             <p className="text-xs text-muted-foreground">{inv.deal}</p>
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold">{inv.tokens.toLocaleString()}</p>
-                          <p className="text-xs text-muted-foreground">tokens</p>
+                          <p className="text-sm font-medium tabular-nums">
+                            {inv.tokens.toLocaleString()}
+                          </p>
+                          <p className="text-xs text-muted-foreground">units</p>
                         </div>
                       </div>
                     ))}
@@ -241,47 +286,63 @@ export default function InvestorDashboardPage() {
           </Tabs>
         </div>
 
-        {/* Sidebar */}
-        <div className="flex flex-col gap-6">
-          {/* Recent Distributions */}
-          <Card className="border border-border">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-base">Recent Distributions</CardTitle>
+        <div className="flex flex-col gap-4">
+          <Card className={investorCardClass()}>
+            <CardHeader
+              className={`flex flex-row items-center justify-between border-b border-border ${investorDensity.cardHeader}`}
+            >
+              <CardTitle className="text-base font-semibold">Recent distributions</CardTitle>
               <Link href="/investor/distributions">
-                <Button variant="ghost" size="sm" className="h-7 text-xs">View All</Button>
+                <Button variant="ghost" size="sm" className="h-8 text-xs">
+                  All
+                </Button>
               </Link>
             </CardHeader>
-            <CardContent>
-              <div className="flex flex-col gap-3">
-                {recentDistributions.map((dist) => (
-                  <div key={dist.id} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
-                    <div>
-                      <p className="text-sm font-medium">{dist.deal}</p>
-                      <p className="text-xs text-muted-foreground"><DateDisplay date={dist.date} /></p>
+            <CardContent className={`${investorDensity.cardContent} pt-3`}>
+              <div className="flex flex-col">
+                {recentDistributions.map((dist, i) => (
+                  <div
+                    key={dist.id}
+                    className={
+                      i < recentDistributions.length - 1
+                        ? 'flex items-center justify-between gap-2 border-b border-border py-2.5'
+                        : 'flex items-center justify-between gap-2 py-2.5'
+                    }
+                  >
+                    <div className="min-w-0 flex flex-col gap-0.5">
+                      <p className="truncate text-sm font-medium">{dist.deal}</p>
+                      <p className="text-xs text-muted-foreground">
+                        <DateDisplay date={dist.date} />
+                      </p>
                     </div>
-                    <p className="font-semibold text-green-600">+<CurrencyDisplay amount={dist.amount} /></p>
+                    <p className="shrink-0 text-sm font-medium tabular-nums text-chart-1">
+                      +<CurrencyDisplay amount={dist.amount} />
+                    </p>
                   </div>
                 ))}
               </div>
             </CardContent>
           </Card>
 
-          {/* Upcoming Events */}
-          <Card className="border border-border">
-            <CardHeader>
-              <CardTitle className="text-base">Upcoming Events</CardTitle>
+          <Card className={investorCardClass()}>
+            <CardHeader
+              className={`border-b border-border ${investorDensity.cardHeader}`}
+            >
+              <CardTitle className="text-base font-semibold">Calendar</CardTitle>
+              <CardDescription>Upcoming milestones</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className={`${investorDensity.cardContent} pt-3`}>
               <div className="flex flex-col gap-3">
                 {upcomingEvents.map((event) => (
-                  <div key={event.id} className="flex items-start gap-3">
-                    <div className={`size-2 rounded-full mt-1.5 ${
-                      event.type === 'distribution' ? 'bg-green-500' :
-                      event.type === 'milestone' ? 'bg-blue-500' : 'bg-orange-500'
-                    }`} />
-                    <div>
-                      <p className="text-sm font-medium">{event.title}</p>
-                      <p className="text-xs text-muted-foreground"><DateDisplay date={event.date} /></p>
+                  <div key={event.id} className="flex gap-2.5">
+                    <div
+                      className={`mt-1.5 size-2 shrink-0 rounded-full ${eventDot[event.type]}`}
+                    />
+                    <div className="flex min-w-0 flex-col gap-0.5">
+                      <p className="text-sm font-medium leading-snug">{event.title}</p>
+                      <p className="text-xs text-muted-foreground">
+                        <DateDisplay date={event.date} />
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -289,28 +350,29 @@ export default function InvestorDashboardPage() {
             </CardContent>
           </Card>
 
-          {/* Quick Links */}
-          <Card className="border border-border">
-            <CardHeader>
-              <CardTitle className="text-base">Quick Actions</CardTitle>
+          <Card className={investorCardClass()}>
+            <CardHeader
+              className={`border-b border-border ${investorDensity.cardHeader}`}
+            >
+              <CardTitle className="text-base font-semibold">Shortcuts</CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-col gap-2">
+            <CardContent className={`flex flex-col gap-1.5 ${investorDensity.cardContent} pt-3`}>
               <Link href="/investor/deals">
                 <Button variant="outline" className="w-full justify-start">
-                  <TrendingUp className="size-4 mr-2" />
-                  Browse New Deals
+                  <TrendingUp data-icon="inline-start" />
+                  Open deals
                 </Button>
               </Link>
               <Link href="/investor/documents">
                 <Button variant="outline" className="w-full justify-start">
-                  <FileText className="size-4 mr-2" />
-                  View Documents
+                  <FileText data-icon="inline-start" />
+                  Documents
                 </Button>
               </Link>
               <Link href="/investor/wallet">
                 <Button variant="outline" className="w-full justify-start">
-                  <Wallet className="size-4 mr-2" />
-                  Manage Wallet
+                  <Wallet data-icon="inline-start" />
+                  Wallet
                 </Button>
               </Link>
             </CardContent>

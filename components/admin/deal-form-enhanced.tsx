@@ -208,7 +208,7 @@ export function DealFormEnhanced({ onSubmit, initialData, isLoading = false, onC
                 </FieldGroup>
 
                 <FieldGroup>
-                  <FieldLabel>Final StreamFi Valuation</FieldLabel>
+                  <FieldLabel>Final StreamFi Ventures valuation</FieldLabel>
                   <div className="relative">
                     <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                     <Input

@@ -1,14 +1,18 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+
+import { BRAND_NAME } from '@/lib/constants'
+import { ThemeProvider } from '@/components/theme-provider'
+
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'StreamFi Ventures - Private Investment Platform',
-  description: 'Invest in streaming shows and manage your portfolio',
+  title: `${BRAND_NAME} — Private Investment Platform`,
+  description: `${BRAND_NAME}: invest in streaming shows and manage your portfolio`,
   generator: 'v0.app',
   icons: {
     icon: [
@@ -35,9 +39,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="font-sans antialiased">
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          {children}
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>

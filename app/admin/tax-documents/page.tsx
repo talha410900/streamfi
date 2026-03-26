@@ -7,10 +7,18 @@ import { FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { StatusBadge } from '@/components/shared/status-badge';
-import { Upload, Download, FileText } from 'lucide-react';
+import { Upload, Download } from 'lucide-react';
+import { DashboardPageHeader } from '@/components/shared/dashboard-page-header';
+import { cn } from '@/lib/utils';
+import { adminDensity, adminCardClass } from '@/components/admin/admin-density';
+
+const tableDense = {
+  head: 'px-3 py-1.5 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground',
+  cell: 'px-3 py-2',
+} as const;
 
 export default function AdminTaxDocumentsPage() {
-  const [k1Documents, setK1Documents] = useState([
+  const [k1Documents] = useState([
     { id: 1, investor_name: 'John Investor', deal: 'Midnight Heist', year: '2025', status: 'sent' },
     { id: 2, investor_name: 'Jane Smith', deal: 'Last Dance', year: '2025', status: 'pending' },
   ]);
@@ -46,27 +54,29 @@ export default function AdminTaxDocumentsPage() {
   };
 
   return (
-    <div className="flex flex-col gap-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Tax Documents</h1>
-        <p className="text-muted-foreground mt-1">Manage K-1 and tax documentation for investors</p>
-      </div>
+    <div className={adminDensity.pageTight}>
+      <DashboardPageHeader
+        title="Tax documents"
+        description="Upload and track K-1 delivery to investors by deal and tax year."
+      />
 
-      <Card className="border border-border/50">
-        <CardHeader>
-          <CardTitle>Upload K-1 Documents</CardTitle>
-          <CardDescription>Generate and distribute tax documents to investors</CardDescription>
+      <Card className={adminCardClass('gap-3 py-3')}>
+        <CardHeader className={cn('gap-1 border-b border-border pb-3', adminDensity.cardHeader)}>
+          <CardTitle className="text-base font-semibold">Upload K-1 documents</CardTitle>
+          <CardDescription className="text-xs leading-snug">
+            Generate and distribute tax documents to investors
+          </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleUpload} className="flex flex-col gap-4">
-            <div className="grid grid-cols-2 gap-4">
-              <FieldGroup>
-                <FieldLabel>Deal</FieldLabel>
+        <CardContent className={cn(adminDensity.cardContent, 'pt-3')}>
+          <form onSubmit={handleUpload} className="flex max-w-2xl flex-col gap-2.5">
+            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3">
+              <FieldGroup className="gap-1.5">
+                <FieldLabel className="text-xs font-medium text-muted-foreground">Deal</FieldLabel>
                 <Select
                   value={uploadData.deal_id}
                   onValueChange={(value) => setUploadData({ ...uploadData, deal_id: value })}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="h-9 text-sm">
                     <SelectValue placeholder="Select deal" />
                   </SelectTrigger>
                   <SelectContent>
@@ -79,20 +89,21 @@ export default function AdminTaxDocumentsPage() {
                 </Select>
               </FieldGroup>
 
-              <FieldGroup>
-                <FieldLabel>Tax Year</FieldLabel>
+              <FieldGroup className="gap-1.5">
+                <FieldLabel className="text-xs font-medium text-muted-foreground">Tax year</FieldLabel>
                 <Input
                   type="number"
                   value={uploadData.year}
                   onChange={(e) => setUploadData({ ...uploadData, year: e.target.value })}
                   placeholder="2025"
+                  className="h-9 text-sm"
                 />
               </FieldGroup>
             </div>
 
-            <FieldGroup>
-              <FieldLabel>K-1 Document (PDF)</FieldLabel>
-              <div className="border-2 border-dashed border-border/50 rounded-lg p-6 text-center cursor-pointer hover:bg-card transition-colors">
+            <FieldGroup className="gap-1.5">
+              <FieldLabel className="text-xs font-medium text-muted-foreground">K-1 document (PDF)</FieldLabel>
+              <div className="relative">
                 <input
                   type="file"
                   accept=".pdf"
@@ -100,55 +111,68 @@ export default function AdminTaxDocumentsPage() {
                   className="hidden"
                   id="file-input"
                 />
-                <label htmlFor="file-input" className="cursor-pointer">
-                  <div className="size-10 rounded-lg bg-muted flex items-center justify-center mx-auto mb-3">
-                    <Upload className="size-5 text-muted-foreground" />
-                  </div>
-                  <p className="font-semibold text-sm">Click to upload or drag and drop</p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {uploadData.file ? uploadData.file.name : 'PDF files only'}
-                  </p>
+                <label
+                  htmlFor="file-input"
+                  className="flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-border/80 bg-muted/25 px-3 py-2.5 transition-colors hover:bg-muted/45"
+                >
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted">
+                    <Upload className="size-3.5 text-muted-foreground" />
+                  </span>
+                  <span className="min-w-0 flex-1 text-left">
+                    <span className="block text-sm font-medium leading-tight">Drop PDF or click to browse</span>
+                    <span className="mt-0.5 block truncate text-xs text-muted-foreground">
+                      {uploadData.file ? uploadData.file.name : 'PDF only'}
+                    </span>
+                  </span>
                 </label>
               </div>
             </FieldGroup>
 
-            <Button type="submit" className="w-full">
-              <Upload className="size-4 mr-2" />
-              Upload K-1 Documents
+            <Button type="submit" className="h-9 w-full max-w-2xl text-sm sm:w-auto sm:min-w-50">
+              <Upload className="mr-2 size-3.5" />
+              Upload K-1 documents
             </Button>
           </form>
         </CardContent>
       </Card>
 
-      <Card className="border border-border/50">
-        <CardHeader>
-          <CardTitle>Issued K-1 Documents</CardTitle>
-          <CardDescription>All tax documents distributed to investors</CardDescription>
+      <Card className={adminCardClass('gap-3 py-3')}>
+        <CardHeader className={cn('gap-1 border-b border-border pb-3', adminDensity.cardHeader)}>
+          <CardTitle className="text-base font-semibold">Issued K-1 documents</CardTitle>
+          <CardDescription className="text-xs leading-snug">
+            All tax documents distributed to investors
+          </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-b border-border">
+              <thead className="border-b border-border bg-muted/30">
                 <tr>
-                  <th className="text-left py-3 px-4 font-semibold">Investor</th>
-                  <th className="text-left py-3 px-4 font-semibold">Deal</th>
-                  <th className="text-left py-3 px-4 font-semibold">Year</th>
-                  <th className="text-left py-3 px-4 font-semibold">Status</th>
-                  <th className="text-left py-3 px-4 font-semibold">Actions</th>
+                  <th className={tableDense.head}>Investor</th>
+                  <th className={tableDense.head}>Deal</th>
+                  <th className={tableDense.head}>Year</th>
+                  <th className={tableDense.head}>Status</th>
+                  <th className={cn(tableDense.head, 'text-right')}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {k1Documents.map((doc) => (
-                  <tr key={doc.id} className="border-b border-border/50 hover:bg-card transition-colors">
-                    <td className="py-4 px-4 font-semibold">{doc.investor_name}</td>
-                    <td className="py-4 px-4">{doc.deal}</td>
-                    <td className="py-4 px-4">{doc.year}</td>
-                    <td className="py-4 px-4">
-                      <StatusBadge status={doc.status === 'sent' ? 'approved' : 'pending'} label={doc.status === 'sent' ? 'Sent' : 'Pending'} />
+                  <tr
+                    key={doc.id}
+                    className="border-b border-border/50 transition-colors last:border-b-0 hover:bg-muted/30"
+                  >
+                    <td className={cn('font-medium', tableDense.cell)}>{doc.investor_name}</td>
+                    <td className={tableDense.cell}>{doc.deal}</td>
+                    <td className={cn('tabular-nums text-muted-foreground', tableDense.cell)}>{doc.year}</td>
+                    <td className={tableDense.cell}>
+                      <StatusBadge
+                        status={doc.status === 'sent' ? 'approved' : 'pending'}
+                        label={doc.status === 'sent' ? 'Sent' : 'Pending'}
+                      />
                     </td>
-                    <td className="py-4 px-4">
-                      <Button variant="outline" size="sm">
-                        <Download className="size-3 mr-1" />
+                    <td className={cn('text-right', tableDense.cell)}>
+                      <Button variant="outline" size="sm" className="h-7 gap-1 px-2 text-xs">
+                        <Download className="size-3" />
                         Download
                       </Button>
                     </td>

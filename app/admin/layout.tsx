@@ -21,8 +21,8 @@ export default function AdminLayout({
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground">Loading...</p>
+      <div className="flex min-h-svh items-center justify-center bg-background">
+        <p className="text-sm text-muted-foreground">Loading…</p>
       </div>
     );
   }
@@ -35,7 +35,7 @@ export default function AdminLayout({
     <div className="flex h-screen">
       <AdminSidebar />
       <main className="flex-1 overflow-y-auto bg-background">
-        <div className="p-8">
+        <div className="mx-auto w-full max-w-[1600px] px-4 py-4 sm:px-5 sm:py-5">
           {children}
         </div>
       </main>

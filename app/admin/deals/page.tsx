@@ -13,6 +13,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Plus, Eye, Edit, Archive, TrendingUp, DollarSign, Users } from 'lucide-react';
+import { DashboardPageHeader } from '@/components/shared/dashboard-page-header';
+import { cn } from '@/lib/utils';
+import { adminDensity, adminCardClass } from '@/components/admin/admin-density';
 
 const initialDeals = [
   {
@@ -102,77 +105,101 @@ export default function AdminDealsPage() {
   const activeDeals = deals.filter(d => d.status === 'open' || d.status === 'funded').length;
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Deal Management</h1>
-          <p className="text-muted-foreground mt-1">Create and manage investment opportunities</p>
-        </div>
-        <Button onClick={() => setIsCreating(true)} className="gap-2">
-          <Plus className="size-4" />
-          Create Deal
-        </Button>
+    <div className={adminDensity.page}>
+      <DashboardPageHeader
+        title="Deals"
+        description="Create offerings, track raises, and manage production status."
+        actions={
+          <Button onClick={() => setIsCreating(true)}>
+            <Plus data-icon="inline-start" />
+            Create deal
+          </Button>
+        }
+      />
+
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-4 md:gap-4">
+        <Card className={adminCardClass()}>
+          <CardContent
+            className={cn('flex flex-col gap-2 pt-4', adminDensity.cardContent)}
+          >
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <TrendingUp className="size-4 shrink-0" />
+              <span className="text-xs font-medium uppercase tracking-wide">Total raised</span>
+            </div>
+            <p className="text-2xl font-semibold tabular-nums">
+              <CurrencyDisplay amount={totalRaised} />
+            </p>
+          </CardContent>
+        </Card>
+        <Card className={adminCardClass()}>
+          <CardContent
+            className={cn('flex flex-col gap-2 pt-4', adminDensity.cardContent)}
+          >
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Users className="size-4 shrink-0" />
+              <span className="text-xs font-medium uppercase tracking-wide">Investors</span>
+            </div>
+            <p className="text-2xl font-semibold tabular-nums">{totalInvestors}</p>
+          </CardContent>
+        </Card>
+        <Card className={adminCardClass()}>
+          <CardContent
+            className={cn('flex flex-col gap-2 pt-4', adminDensity.cardContent)}
+          >
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <DollarSign className="size-4 shrink-0" />
+              <span className="text-xs font-medium uppercase tracking-wide">Active</span>
+            </div>
+            <p className="text-2xl font-semibold tabular-nums">{activeDeals}</p>
+          </CardContent>
+        </Card>
+        <Card className={adminCardClass()}>
+          <CardContent
+            className={cn('flex flex-col gap-2 pt-4', adminDensity.cardContent)}
+          >
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <TrendingUp className="size-4 shrink-0" />
+              <span className="text-xs font-medium uppercase tracking-wide">All deals</span>
+            </div>
+            <p className="text-2xl font-semibold tabular-nums">{deals.length}</p>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="border border-border">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-1">
-              <TrendingUp className="size-4" />
-              <span className="text-xs font-medium">Total Raised</span>
-            </div>
-            <p className="text-2xl font-bold"><CurrencyDisplay amount={totalRaised} /></p>
-          </CardContent>
-        </Card>
-        <Card className="border border-border">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-1">
-              <Users className="size-4" />
-              <span className="text-xs font-medium">Total Investors</span>
-            </div>
-            <p className="text-2xl font-bold">{totalInvestors}</p>
-          </CardContent>
-        </Card>
-        <Card className="border border-border">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-1">
-              <DollarSign className="size-4" />
-              <span className="text-xs font-medium">Active Deals</span>
-            </div>
-            <p className="text-2xl font-bold">{activeDeals}</p>
-          </CardContent>
-        </Card>
-        <Card className="border border-border">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-1">
-              <TrendingUp className="size-4" />
-              <span className="text-xs font-medium">Total Deals</span>
-            </div>
-            <p className="text-2xl font-bold">{deals.length}</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Deals Table */}
-      <Card className="border border-border">
-        <CardHeader>
+      <Card className={adminCardClass()}>
+        <CardHeader className={adminDensity.cardHeader}>
           <CardTitle className="text-base">All Deals</CardTitle>
           <CardDescription>{deals.length} deals in the system</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className={adminDensity.cardContentSection}>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="border-b border-border">
                 <tr>
-                  <th className="text-left py-3 px-4 font-semibold">Deal</th>
-                  <th className="text-left py-3 px-4 font-semibold">Token</th>
-                  <th className="text-left py-3 px-4 font-semibold">Status</th>
-                  <th className="text-left py-3 px-4 font-semibold">Progress</th>
-                  <th className="text-left py-3 px-4 font-semibold">Raised</th>
-                  <th className="text-left py-3 px-4 font-semibold">Investors</th>
-                  <th className="text-left py-3 px-4 font-semibold">Production</th>
-                  <th className="text-left py-3 px-4 font-semibold">Actions</th>
+                  <th className={cn('text-left font-semibold', adminDensity.tableHead)}>
+                    Deal
+                  </th>
+                  <th className={cn('text-left font-semibold', adminDensity.tableHead)}>
+                    Token
+                  </th>
+                  <th className={cn('text-left font-semibold', adminDensity.tableHead)}>
+                    Status
+                  </th>
+                  <th className={cn('text-left font-semibold', adminDensity.tableHead)}>
+                    Progress
+                  </th>
+                  <th className={cn('text-left font-semibold', adminDensity.tableHead)}>
+                    Raised
+                  </th>
+                  <th className={cn('text-left font-semibold', adminDensity.tableHead)}>
+                    Investors
+                  </th>
+                  <th className={cn('text-left font-semibold', adminDensity.tableHead)}>
+                    Production
+                  </th>
+                  <th className={cn('text-left font-semibold', adminDensity.tableHead)}>
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -180,35 +207,35 @@ export default function AdminDealsPage() {
                   const progress = (deal.raised / deal.raise_target) * 100;
                   return (
                     <tr key={deal.id} className="border-b border-border/50 hover:bg-card">
-                      <td className="py-4 px-4">
+                      <td className={adminDensity.tableCell}>
                         <div>
                           <p className="font-semibold">{deal.title}</p>
                           <p className="text-xs text-muted-foreground">{deal.genre}</p>
                         </div>
                       </td>
-                      <td className="py-4 px-4">
+                      <td className={adminDensity.tableCell}>
                         <Badge variant="outline">{deal.token_symbol}</Badge>
                       </td>
-                      <td className="py-4 px-4">
+                      <td className={adminDensity.tableCell}>
                         <StatusBadge status={deal.status as any} />
                       </td>
-                      <td className="py-4 px-4">
+                      <td className={adminDensity.tableCell}>
                         <div className="flex items-center gap-2">
-                          <Progress value={Math.min(progress, 100)} className="w-20 h-1.5" />
+                          <Progress value={Math.min(progress, 100)} className="h-1.5 w-20" />
                           <span className="text-xs text-muted-foreground">{Math.round(progress)}%</span>
                         </div>
                       </td>
-                      <td className="py-4 px-4">
+                      <td className={adminDensity.tableCell}>
                         <div>
                           <p className="font-medium"><CurrencyDisplay amount={deal.raised} /></p>
                           <p className="text-xs text-muted-foreground">of <CurrencyDisplay amount={deal.raise_target} /></p>
                         </div>
                       </td>
-                      <td className="py-4 px-4">{deal.investors}</td>
-                      <td className="py-4 px-4">
+                      <td className={adminDensity.tableCell}>{deal.investors}</td>
+                      <td className={adminDensity.tableCell}>
                         <Badge variant="secondary">{deal.production_status.replace('_', ' ')}</Badge>
                       </td>
-                      <td className="py-4 px-4">
+                      <td className={adminDensity.tableCell}>
                         <div className="flex items-center gap-1">
                           <Button variant="ghost" size="sm" onClick={() => router.push(`/admin/deals/${deal.id}`)}>
                             <Eye className="size-4" />
@@ -270,7 +297,7 @@ export default function AdminDealsPage() {
           subtitle="This will close the deal and prevent further investments"
           size="sm"
         >
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
             <p className="text-sm text-muted-foreground">
               Are you sure you want to archive "{archivingDeal.title}"? This action cannot be undone easily.
             </p>

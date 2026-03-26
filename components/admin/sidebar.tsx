@@ -13,7 +13,6 @@ import {
   Settings,
   LogOut,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/shared/theme-toggle';
 import { logoutUser } from '@/lib/auth';
 
@@ -39,32 +38,33 @@ export function AdminSidebar() {
   };
 
   return (
-    <aside className="w-64 bg-sidebar border-r border-border h-screen flex flex-col">
-      {/* Header */}
+    <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-border bg-sidebar">
       <div className="border-b border-border px-6 py-5">
-        <Link href="/admin/dashboard" className="flex items-center gap-2.5 group">
-          <div className="size-8 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
-            <span className="text-primary-foreground font-bold text-xs">SF</span>
+        <Link href="/admin/dashboard" className="group flex items-center gap-2.5">
+          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary">
+            <span className="text-xs font-bold text-primary-foreground">SF</span>
           </div>
-          <span className="font-semibold text-sm text-foreground">StreamFi</span>
+          <span className="text-sm font-semibold text-foreground">
+            StreamFi Ventures
+          </span>
         </Link>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 p-3 flex flex-col gap-1 overflow-y-auto">
+      <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-3">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+          const isActive =
+            pathname === item.href || pathname.startsWith(item.href + '/');
           return (
             <Link key={item.href} href={item.href}>
               <div
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
+                className={`flex items-center gap-3 rounded-lg px-4 py-2.5 transition-all ${
                   isActive
-                    ? 'bg-primary text-primary-foreground font-medium'
+                    ? 'bg-primary font-medium text-primary-foreground'
                     : 'text-sidebar-foreground hover:bg-muted'
                 }`}
               >
-                <Icon className="size-4 flex-shrink-0" />
+                <Icon className="size-4 shrink-0" />
                 <span className="text-sm">{item.label}</span>
               </div>
             </Link>
@@ -72,14 +72,14 @@ export function AdminSidebar() {
         })}
       </nav>
 
-      {/* Footer */}
-      <div className="border-t border-border p-3 flex flex-col gap-2">
+      <div className="flex flex-col gap-2 border-t border-border p-3">
         <ThemeToggle />
         <button
+          type="button"
           onClick={handleLogout}
-          className="flex items-center gap-3 w-full px-4 py-2.5 rounded-lg text-sidebar-foreground hover:bg-muted transition-colors text-sm"
+          className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-sidebar-foreground transition-colors hover:bg-muted"
         >
-          <LogOut className="size-4 flex-shrink-0" />
+          <LogOut className="size-4 shrink-0" />
           <span>Logout</span>
         </button>
       </div>

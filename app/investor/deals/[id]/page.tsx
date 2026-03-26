@@ -18,6 +18,11 @@ import {
   Film, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock,
   ExternalLink, Coins
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import {
+  investorDensity,
+  investorCardClass,
+} from '@/components/investor/investor-density';
 
 const mockDeals: Record<string, any> = {
   '1': {
@@ -139,8 +144,8 @@ export default function DealDetailPage() {
             Back to Deals
           </Button>
         </Link>
-        <Card className="border border-border">
-          <CardContent className="py-12 text-center">
+        <Card className={investorCardClass()}>
+          <CardContent className="py-8 text-center">
             <p className="text-muted-foreground">Deal not found</p>
           </CardContent>
         </Card>
@@ -159,7 +164,7 @@ export default function DealDetailPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className={investorDensity.pageTight}>
       {/* Back Button */}
       <Link href="/investor/deals">
         <Button variant="outline">
@@ -172,7 +177,7 @@ export default function DealDetailPage() {
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold tracking-tight">{deal.title}</h1>
+            <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">{deal.title}</h1>
             <StatusBadge status={deal.status} />
           </div>
           <div className="flex items-center gap-2 mt-1">
@@ -187,25 +192,30 @@ export default function DealDetailPage() {
       </div>
 
       {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-5">
         {/* Left Column */}
-        <div className="lg:col-span-2 flex flex-col gap-6">
+        <div className="flex flex-col gap-4 lg:col-span-2">
           {/* Description */}
-          <Card className="border border-border">
-            <CardHeader>
+          <Card className={investorCardClass()}>
+            <CardHeader className={investorDensity.cardHeader}>
               <CardTitle className="text-base">About This Deal</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className={investorDensity.cardContentSection}>
               <p className="text-muted-foreground leading-relaxed">{deal.description}</p>
             </CardContent>
           </Card>
 
           {/* Funding Progress */}
-          <Card className="border border-border">
-            <CardHeader>
+          <Card className={investorCardClass()}>
+            <CardHeader className={investorDensity.cardHeader}>
               <CardTitle className="text-base">Funding Progress</CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-col gap-4">
+            <CardContent
+              className={cn(
+                'flex flex-col gap-3',
+                investorDensity.cardContentSection,
+              )}
+            >
               <div>
                 <div className="flex justify-between mb-2">
                   <span className="text-2xl font-bold">{Math.round(progress)}%</span>
@@ -216,7 +226,7 @@ export default function DealDetailPage() {
                 <Progress value={progress} className="h-3" />
               </div>
 
-              <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
+              <div className="grid grid-cols-3 gap-3 border-t border-border pt-3 sm:gap-4 sm:pt-4">
                 <div>
                   <p className="text-xs text-muted-foreground mb-1">Valuation</p>
                   <p className="font-semibold"><CurrencyDisplay amount={deal.valuation} compact /></p>
@@ -234,12 +244,14 @@ export default function DealDetailPage() {
           </Card>
 
           {/* Show Progress */}
-          <Card className="border border-border">
-            <CardHeader>
+          <Card className={investorCardClass()}>
+            <CardHeader className={investorDensity.cardHeader}>
               <CardTitle className="text-base">Show Progress</CardTitle>
               <CardDescription>Track production and distribution status</CardDescription>
             </CardHeader>
-            <CardContent className="flex flex-col gap-6">
+            <CardContent
+              className={cn('flex flex-col gap-4', investorDensity.cardContentSection)}
+            >
               {/* Production Timeline */}
               <div>
                 <p className="text-sm font-medium mb-3">Production Status</p>
@@ -264,12 +276,12 @@ export default function DealDetailPage() {
               </div>
 
               {/* Status Grid */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 bg-card rounded-lg">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-lg bg-card p-2.5 sm:p-3">
                   <p className="text-xs text-muted-foreground mb-1">Release Status</p>
                   <p className="font-medium capitalize">{deal.releaseStatus.replace('_', ' ')}</p>
                 </div>
-                <div className="p-3 bg-card rounded-lg">
+                <div className="rounded-lg bg-card p-2.5 sm:p-3">
                   <p className="text-xs text-muted-foreground mb-1">Distribution Status</p>
                   <p className="font-medium capitalize">{deal.distributionStatus}</p>
                 </div>
@@ -278,16 +290,16 @@ export default function DealDetailPage() {
           </Card>
 
           {/* Updates */}
-          <Card className="border border-border">
-            <CardHeader>
+          <Card className={investorCardClass()}>
+            <CardHeader className={investorDensity.cardHeader}>
               <CardTitle className="text-base">Latest Updates</CardTitle>
               <CardDescription>News from the production team</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="flex flex-col gap-4">
+            <CardContent className={investorDensity.cardContentSection}>
+              <div className="flex flex-col gap-3">
                 {deal.updates.map((update: any) => (
-                  <div key={update.id} className="flex gap-3 pb-4 border-b border-border/50 last:border-0 last:pb-0">
-                    <div className="size-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div key={update.id} className="flex gap-2.5 border-b border-border/50 pb-3 last:border-0 last:pb-0">
+                    <div className="size-8 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
                       <AlertCircle className="size-4 text-primary" />
                     </div>
                     <div>
@@ -302,15 +314,15 @@ export default function DealDetailPage() {
           </Card>
 
           {/* Documents */}
-          <Card className="border border-border">
-            <CardHeader>
+          <Card className={investorCardClass()}>
+            <CardHeader className={investorDensity.cardHeader}>
               <CardTitle className="text-base">Deal Documents</CardTitle>
               <CardDescription>Review investment materials</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="flex flex-col gap-2">
+            <CardContent className={investorDensity.cardContentSection}>
+              <div className="flex flex-col gap-1.5">
                 {deal.documents.map((doc: any) => (
-                  <div key={doc.id} className="flex items-center justify-between p-3 bg-card rounded-lg hover:bg-muted transition-colors">
+                  <div key={doc.id} className="flex items-center justify-between rounded-lg bg-card p-2.5 transition-colors hover:bg-muted sm:p-3">
                     <div className="flex items-center gap-3">
                       <FileText className="size-5 text-muted-foreground" />
                       <div>
@@ -329,15 +341,17 @@ export default function DealDetailPage() {
         </div>
 
         {/* Right Column - Investment Card */}
-        <div className="flex flex-col gap-6">
-          <Card className="border border-border sticky top-8">
-            <CardHeader>
+        <div className="flex flex-col gap-4">
+          <Card className={cn(investorCardClass(), 'sticky top-4')}>
+            <CardHeader className={investorDensity.cardHeader}>
               <CardTitle>Investment Summary</CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-col gap-4">
+            <CardContent
+              className={cn('flex flex-col gap-3', investorDensity.cardContentSection)}
+            >
               {investmentComplete ? (
-                <div className="bg-green-50 dark:bg-green-950/30 p-4 rounded-lg text-center">
-                  <CheckCircle className="size-8 text-green-600 mx-auto mb-2" />
+                <div className="rounded-lg bg-green-50 p-3 text-center dark:bg-green-950/30 sm:p-3.5">
+                  <CheckCircle className="mx-auto mb-2 size-8 text-chart-1" />
                   <p className="font-semibold text-green-900 dark:text-green-300 mb-2">Investment Submitted!</p>
                   <p className="text-sm text-green-700 dark:text-green-400">
                     You'll receive wire instructions shortly. Once funds are received, tokens will be issued to your wallet.
@@ -346,7 +360,7 @@ export default function DealDetailPage() {
               ) : (
                 <>
                   {/* Key Investment Info */}
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-sm text-muted-foreground">Unit Price</span>
                       <span className="font-semibold"><CurrencyDisplay amount={deal.unitPrice} /></span>
@@ -365,7 +379,7 @@ export default function DealDetailPage() {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-border">
+                  <div className="border-t border-border pt-3">
                     <div className="flex justify-between mb-1">
                       <span className="text-sm text-muted-foreground">Funding Period</span>
                     </div>
@@ -393,12 +407,12 @@ export default function DealDetailPage() {
           </Card>
 
           {/* Quick Stats */}
-          <Card className="border border-border">
-            <CardHeader>
+          <Card className={investorCardClass()}>
+            <CardHeader className={investorDensity.cardHeader}>
               <CardTitle className="text-base">Key Metrics</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4">
+            <CardContent className={investorDensity.cardContentSection}>
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div className="flex items-center gap-2">
                   <Target className="size-4 text-muted-foreground" />
                   <div>

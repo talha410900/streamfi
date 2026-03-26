@@ -3,16 +3,28 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Modal } from '@/components/shared/modal';
 import { CurrencyDisplay } from '@/components/shared/currency-display';
 import { DateDisplay } from '@/components/shared/date-display';
 import {
-  Wallet, Copy, ExternalLink, Link2, Unlink, Coins, ArrowUpRight,
-  CheckCircle, AlertCircle, Shield, QrCode, RefreshCw
+  Wallet,
+  Copy,
+  ExternalLink,
+  Link2,
+  Coins,
+  CheckCircle,
+  AlertCircle,
+  Shield,
+  QrCode,
 } from 'lucide-react';
+import { DashboardPageHeader } from '@/components/shared/dashboard-page-header';
+import { cn } from '@/lib/utils';
+import {
+  investorDensity,
+  investorCardClass,
+} from '@/components/investor/investor-density';
 
 const walletData = {
   address: '9B5X7kKQz1j4mL2pN8r5sT6vX9y2w4z6B1c3d5f7h9jK3mN5',
@@ -27,10 +39,15 @@ const tokenHoldings = [
 ];
 
 const transactionHistory = [
-  { id: 1, type: 'received', token: 'MHT', amount: 5000, from: 'StreamFi Treasury', date: '2026-01-15', tx: '5Kp9QmNvR2tX8wZ5yB3cF6dG...' },
-  { id: 2, type: 'received', token: 'LD', amount: 1500, from: 'StreamFi Treasury', date: '2025-11-20', tx: '7Bt8RpLxM2nQ5vX9zA1cE4fG...' },
+  { id: 1, type: 'received', token: 'MHT', amount: 5000, from: 'StreamFi Ventures Treasury', date: '2026-01-15', tx: '5Kp9QmNvR2tX8wZ5yB3cF6dG...' },
+  { id: 2, type: 'received', token: 'LD', amount: 1500, from: 'StreamFi Ventures Treasury', date: '2025-11-20', tx: '7Bt8RpLxM2nQ5vX9zA1cE4fG...' },
   { id: 3, type: 'distribution', token: 'SOL', amount: 0.25, from: 'Midnight Heist Distribution', date: '2026-03-20', tx: '3Df8GhJkLmN6pQ2rS5tV8wX...' },
 ];
+
+function txTypeLabel(type: string) {
+  if (type === 'distribution') return 'Distribution';
+  return 'Received';
+}
 
 export default function InvestorWalletPage() {
   const [copied, setCopied] = useState(false);
@@ -49,141 +66,172 @@ export default function InvestorWalletPage() {
   const totalTokenValue = tokenHoldings.reduce((sum, t) => sum + t.value, 0);
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Wallet</h1>
-        <p className="text-muted-foreground mt-1">Manage your Solana wallet and token holdings</p>
-      </div>
+    <div className={investorDensity.page}>
+      <DashboardPageHeader
+        title="Wallet"
+        description="Solana address, token balances, and on-chain activity tied to your account."
+      />
 
-      {/* Wallet Card */}
-      <Card className="border border-border">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle className="text-base flex items-center gap-2">
-              <Wallet className="size-5" />
-              Solana Wallet
+      <Card className={investorCardClass()}>
+        <CardHeader
+          className={cn(
+            'flex flex-row flex-wrap items-start justify-between gap-3',
+            investorDensity.cardHeader,
+          )}
+        >
+          <div className="flex flex-col gap-0.5">
+            <CardTitle className="flex items-center gap-2 text-base font-semibold">
+              <Wallet className="size-4 text-muted-foreground" />
+              Solana wallet
             </CardTitle>
-            <CardDescription>Your blockchain wallet for receiving tokens and distributions</CardDescription>
+            <CardDescription>Receive SPL units and distribution proceeds</CardDescription>
           </div>
-          <Badge className="bg-green-600">Connected</Badge>
+          <Badge variant="default" className="shrink-0">
+            Connected
+          </Badge>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-col gap-4">
-            {/* Address */}
-            <div className="flex items-center justify-between p-4 bg-card rounded-lg">
-              <div>
-                <p className="text-xs text-muted-foreground mb-1">Wallet Address</p>
-                <code className="text-sm font-mono">{truncateAddress(walletData.address)}</code>
+        <CardContent className={investorDensity.cardContentSection}>
+          <div className="flex flex-col gap-2.5">
+            <div className="flex flex-col gap-2 rounded-lg border border-border/80 bg-muted/30 p-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0">
+                <p className="mb-0.5 text-xs text-muted-foreground">Wallet address</p>
+                <code className="block truncate text-sm font-mono">{truncateAddress(walletData.address)}</code>
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={handleCopy}>
-                  {copied ? <CheckCircle className="size-4 text-green-600" /> : <Copy className="size-4" />}
+              <div className="flex shrink-0 gap-2">
+                <Button variant="outline" size="sm" onClick={handleCopy} className="h-8">
+                  {copied ? <CheckCircle className="size-3.5 text-chart-1" /> : <Copy className="size-3.5" />}
+                  <span className="ml-1.5 hidden sm:inline">{copied ? 'Copied' : 'Copy'}</span>
                 </Button>
-                <Button variant="outline" size="sm" asChild>
-                  <a href={`https://explorer.solana.com/address/${walletData.address}`} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="size-4" />
+                <Button variant="outline" size="sm" className="h-8 px-2.5" asChild>
+                  <a
+                    href={`https://explorer.solana.com/address/${walletData.address}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="View on explorer"
+                  >
+                    <ExternalLink className="size-3.5" />
                   </a>
                 </Button>
               </div>
             </div>
 
-            {/* Network Info */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               <div>
                 <p className="text-xs text-muted-foreground">Network</p>
-                <p className="font-semibold">{walletData.network}</p>
+                <p className="text-sm font-semibold">{walletData.network}</p>
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Connected Since</p>
-                <p className="font-semibold"><DateDisplay date={walletData.connectedAt} /></p>
+                <p className="text-xs text-muted-foreground">Connected since</p>
+                <p className="text-sm font-semibold">
+                  <DateDisplay date={walletData.connectedAt} />
+                </p>
               </div>
             </div>
 
-            {/* Actions */}
-            <div className="flex gap-3 pt-2">
-              <Button variant="outline" onClick={() => setShowConnectModal(true)}>
-                <Link2 className="size-4 mr-2" />
-                Change Wallet
+            <div className="flex flex-wrap gap-2 border-t border-border/60 pt-2.5">
+              <Button variant="outline" size="sm" onClick={() => setShowConnectModal(true)}>
+                <Link2 className="mr-1.5 size-3.5" />
+                Change wallet
               </Button>
-              <Button variant="outline">
-                <QrCode className="size-4 mr-2" />
-                Show QR Code
+              <Button variant="outline" size="sm">
+                <QrCode className="mr-1.5 size-3.5" />
+                Show QR
               </Button>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Token Holdings */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="border border-border">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-2">
-              <Coins className="size-4" />
-              <span className="text-sm font-medium">Total Token Value</span>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-4">
+        <Card className={investorCardClass()}>
+          <CardContent className={cn('flex flex-col gap-2 pt-4', investorDensity.cardContent)}>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Coins className="size-4 shrink-0" />
+              <span className="text-xs font-medium uppercase tracking-wide">Total token value</span>
             </div>
-            <p className="text-2xl font-bold"><CurrencyDisplay amount={totalTokenValue} /></p>
+            <p className="text-2xl font-semibold tabular-nums">
+              <CurrencyDisplay amount={totalTokenValue} />
+            </p>
+            <p className="text-xs text-muted-foreground">Across positions</p>
           </CardContent>
         </Card>
-        <Card className="border border-border">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-2">
-              <Wallet className="size-4" />
-              <span className="text-sm font-medium">Token Types</span>
+        <Card className={investorCardClass()}>
+          <CardContent className={cn('flex flex-col gap-2 pt-4', investorDensity.cardContent)}>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Wallet className="size-4 shrink-0" />
+              <span className="text-xs font-medium uppercase tracking-wide">Token types</span>
             </div>
-            <p className="text-2xl font-bold">{tokenHoldings.length}</p>
+            <p className="text-2xl font-semibold tabular-nums">{tokenHoldings.length}</p>
+            <p className="text-xs text-muted-foreground">SPL positions</p>
           </CardContent>
         </Card>
-        <Card className="border border-border">
-          <CardContent className="pt-4">
-            <div className="flex items-center gap-2 text-muted-foreground mb-2">
-              <Shield className="size-4" />
-              <span className="text-sm font-medium">Security Status</span>
+        <Card className={investorCardClass()}>
+          <CardContent className={cn('flex flex-col gap-2 pt-4', investorDensity.cardContent)}>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Shield className="size-4 shrink-0" />
+              <span className="text-xs font-medium uppercase tracking-wide">Security</span>
             </div>
-            <p className="text-2xl font-bold text-green-600">Verified</p>
+            <p className="text-2xl font-semibold text-chart-1">Verified</p>
+            <p className="text-xs text-muted-foreground">Wallet linked</p>
           </CardContent>
         </Card>
       </div>
 
       <Tabs defaultValue="holdings" className="w-full">
-        <TabsList>
-          <TabsTrigger value="holdings">Token Holdings</TabsTrigger>
-          <TabsTrigger value="transactions">Transaction History</TabsTrigger>
+        <TabsList className="h-9">
+          <TabsTrigger value="holdings" className="text-xs sm:text-sm">
+            Token holdings
+          </TabsTrigger>
+          <TabsTrigger value="transactions" className="text-xs sm:text-sm">
+            Transaction history
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="holdings" className="mt-4">
-          <Card className="border border-border">
-            <CardHeader>
-              <CardTitle className="text-base">Your Tokens</CardTitle>
-              <CardDescription>Investment tokens held in your wallet</CardDescription>
+        <TabsContent value="holdings" className="mt-3">
+          <Card className={investorCardClass()}>
+            <CardHeader className={investorDensity.cardHeader}>
+              <CardTitle className="text-base">Your tokens</CardTitle>
+              <CardDescription>Investment tokens in your wallet</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="border-b border-border">
                     <tr>
-                      <th className="text-left py-3 px-4 font-semibold">Deal</th>
-                      <th className="text-left py-3 px-4 font-semibold">Symbol</th>
-                      <th className="text-left py-3 px-4 font-semibold">Tokens</th>
-                      <th className="text-left py-3 px-4 font-semibold">Unit Price</th>
-                      <th className="text-left py-3 px-4 font-semibold">Value</th>
-                      <th className="text-left py-3 px-4 font-semibold">Actions</th>
+                      <th className={cn('text-left font-semibold', investorDensity.tableHead)}>Deal</th>
+                      <th className={cn('text-left font-semibold', investorDensity.tableHead)}>Symbol</th>
+                      <th className={cn('text-left font-semibold', investorDensity.tableHead)}>Tokens</th>
+                      <th className={cn('text-left font-semibold', investorDensity.tableHead)}>Unit price</th>
+                      <th className={cn('text-left font-semibold', investorDensity.tableHead)}>Value</th>
+                      <th className={cn('text-right font-semibold', investorDensity.tableHead)}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {tokenHoldings.map((token) => (
-                      <tr key={token.id} className="border-b border-border/50 hover:bg-card">
-                        <td className="py-4 px-4 font-semibold">{token.deal}</td>
-                        <td className="py-4 px-4">
-                          <Badge variant="outline">{token.symbol}</Badge>
+                      <tr key={token.id} className="border-b border-border/50 transition-colors hover:bg-muted/40">
+                        <td className={cn('font-semibold', investorDensity.tableCell)}>{token.deal}</td>
+                        <td className={investorDensity.tableCell}>
+                          <Badge variant="outline" className="font-mono text-xs">
+                            {token.symbol}
+                          </Badge>
                         </td>
-                        <td className="py-4 px-4">{token.tokens.toLocaleString()}</td>
-                        <td className="py-4 px-4"><CurrencyDisplay amount={token.unitPrice} /></td>
-                        <td className="py-4 px-4 font-semibold"><CurrencyDisplay amount={token.value} /></td>
-                        <td className="py-4 px-4">
-                          <Button variant="ghost" size="sm" asChild>
-                            <a href={`https://explorer.solana.com/address/${walletData.address}`} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="size-4" />
+                        <td className={cn('tabular-nums', investorDensity.tableCell)}>
+                          {token.tokens.toLocaleString()}
+                        </td>
+                        <td className={cn('tabular-nums', investorDensity.tableCell)}>
+                          <CurrencyDisplay amount={token.unitPrice} />
+                        </td>
+                        <td className={cn('font-semibold tabular-nums', investorDensity.tableCell)}>
+                          <CurrencyDisplay amount={token.value} />
+                        </td>
+                        <td className={cn('text-right', investorDensity.tableCell)}>
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0" asChild>
+                            <a
+                              href={`https://explorer.solana.com/address/${walletData.address}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <ExternalLink className="size-3.5" />
                             </a>
                           </Button>
                         </td>
@@ -196,43 +244,51 @@ export default function InvestorWalletPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="transactions" className="mt-4">
-          <Card className="border border-border">
-            <CardHeader>
-              <CardTitle className="text-base">Transaction History</CardTitle>
-              <CardDescription>All token transactions for your wallet</CardDescription>
+        <TabsContent value="transactions" className="mt-3">
+          <Card className={investorCardClass()}>
+            <CardHeader className={investorDensity.cardHeader}>
+              <CardTitle className="text-base">Transaction history</CardTitle>
+              <CardDescription>Token activity for this wallet</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="border-b border-border">
                     <tr>
-                      <th className="text-left py-3 px-4 font-semibold">Type</th>
-                      <th className="text-left py-3 px-4 font-semibold">Token</th>
-                      <th className="text-left py-3 px-4 font-semibold">Amount</th>
-                      <th className="text-left py-3 px-4 font-semibold">From</th>
-                      <th className="text-left py-3 px-4 font-semibold">Date</th>
-                      <th className="text-left py-3 px-4 font-semibold">TX</th>
+                      <th className={cn('text-left font-semibold', investorDensity.tableHead)}>Type</th>
+                      <th className={cn('text-left font-semibold', investorDensity.tableHead)}>Token</th>
+                      <th className={cn('text-left font-semibold', investorDensity.tableHead)}>Amount</th>
+                      <th className={cn('text-left font-semibold', investorDensity.tableHead)}>From</th>
+                      <th className={cn('text-left font-semibold', investorDensity.tableHead)}>Date</th>
+                      <th className={cn('text-left font-semibold', investorDensity.tableHead)}>TX</th>
                     </tr>
                   </thead>
                   <tbody>
                     {transactionHistory.map((tx) => (
-                      <tr key={tx.id} className="border-b border-border/50 hover:bg-card">
-                        <td className="py-4 px-4">
-                          <Badge variant={tx.type === 'distribution' ? 'default' : 'secondary'}>
-                            {tx.type}
+                      <tr key={tx.id} className="border-b border-border/50 transition-colors hover:bg-muted/40">
+                        <td className={investorDensity.tableCell}>
+                          <Badge variant={tx.type === 'distribution' ? 'default' : 'secondary'} className="text-xs">
+                            {txTypeLabel(tx.type)}
                           </Badge>
                         </td>
-                        <td className="py-4 px-4">
-                          <Badge variant="outline">{tx.token}</Badge>
+                        <td className={investorDensity.tableCell}>
+                          <Badge variant="outline" className="font-mono text-xs">
+                            {tx.token}
+                          </Badge>
                         </td>
-                        <td className="py-4 px-4 font-semibold text-green-600">
+                        <td className={cn('font-semibold tabular-nums text-chart-1', investorDensity.tableCell)}>
                           +{tx.amount.toLocaleString()} {tx.token}
                         </td>
-                        <td className="py-4 px-4 text-muted-foreground">{tx.from}</td>
-                        <td className="py-4 px-4"><DateDisplay date={tx.date} /></td>
-                        <td className="py-4 px-4">
-                          <code className="text-xs bg-muted px-2 py-1 rounded">{tx.tx.slice(0, 20)}...</code>
+                        <td className={cn('max-w-50 truncate text-muted-foreground', investorDensity.tableCell)}>
+                          {tx.from}
+                        </td>
+                        <td className={investorDensity.tableCell}>
+                          <DateDisplay date={tx.date} />
+                        </td>
+                        <td className={investorDensity.tableCell}>
+                          <code className="rounded bg-muted px-1.5 py-0.5 text-[11px] leading-tight">
+                            {tx.tx.slice(0, 18)}…
+                          </code>
                         </td>
                       </tr>
                     ))}
@@ -244,38 +300,37 @@ export default function InvestorWalletPage() {
         </TabsContent>
       </Tabs>
 
-      {/* Connect Wallet Modal */}
       <Modal
         isOpen={showConnectModal}
         onClose={() => setShowConnectModal(false)}
-        title="Connect Wallet"
-        subtitle="Link your Solana wallet to receive tokens"
+        title="Connect wallet"
+        subtitle="Link a Solana wallet to receive tokens"
         size="md"
       >
-        <div className="flex flex-col gap-4">
-          <div className="p-4 bg-yellow-50 dark:bg-yellow-950/30 rounded-lg border border-yellow-200 dark:border-yellow-900">
+        <div className="flex flex-col gap-3">
+          <div className="rounded-lg border border-yellow-200/80 bg-yellow-50 p-3 dark:border-yellow-900 dark:bg-yellow-950/30">
             <div className="flex gap-2">
-              <AlertCircle className="size-5 text-yellow-600 flex-shrink-0" />
+              <AlertCircle className="size-4 shrink-0 text-yellow-600 dark:text-yellow-500" />
               <div>
-                <p className="font-medium text-yellow-900 dark:text-yellow-300">Important</p>
-                <p className="text-sm text-yellow-700 dark:text-yellow-400 mt-1">
-                  Changing your wallet will disconnect the current wallet. Make sure you have access to the new wallet before proceeding.
+                <p className="text-sm font-medium text-yellow-900 dark:text-yellow-200">Before you switch</p>
+                <p className="mt-1 text-xs leading-relaxed text-yellow-800/90 dark:text-yellow-400/95">
+                  Changing wallets disconnects the current one. Confirm you control the new address.
                 </p>
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-3">
-            <Button className="w-full justify-start h-14" variant="outline">
-              <img src="https://phantom.app/img/phantom-logo.svg" alt="Phantom" className="size-6 mr-3" />
-              Connect Phantom
+          <div className="flex flex-col gap-2">
+            <Button className="h-10 justify-start gap-3 px-3" variant="outline" type="button">
+              <img src="https://phantom.app/img/phantom-logo.svg" alt="" className="size-5" />
+              <span className="text-sm font-medium">Phantom</span>
             </Button>
-            <Button className="w-full justify-start h-14" variant="outline">
-              <img src="https://solana.com/img/solana-logo.svg" alt="Solflare" className="size-6 mr-3" />
-              Connect Solflare
+            <Button className="h-10 justify-start gap-3 px-3" variant="outline" type="button">
+              <img src="https://solana.com/img/solana-logo.svg" alt="" className="size-5" />
+              <span className="text-sm font-medium">Solflare</span>
             </Button>
-            <Button className="w-full justify-start h-14" variant="outline">
-              <QrCode className="size-6 mr-3 text-muted-foreground" />
-              Enter Address Manually
+            <Button className="h-10 justify-start gap-3 px-3" variant="outline" type="button">
+              <QrCode className="size-5 text-muted-foreground" />
+              <span className="text-sm font-medium">Enter address manually</span>
             </Button>
           </div>
         </div>

@@ -48,16 +48,18 @@ export default function InvestorOnboardingPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <div className="flex-1 flex flex-col items-center justify-center py-12 px-4">
+      <div className="flex flex-1 flex-col items-center justify-center px-4 py-8 sm:py-10">
         <div className="w-full max-w-3xl">
-          <div className="mb-12 text-center">
-            <h1 className="text-3xl font-bold tracking-tight mb-2">Complete Your Profile</h1>
+          <div className="mb-8 text-center sm:mb-10">
+            <h1 className="mb-2 text-2xl font-semibold tracking-tight sm:text-3xl">
+              Complete Your Profile
+            </h1>
             <p className="text-muted-foreground">
               Let's get you set up to start investing in streaming entertainment
             </p>
           </div>
 
-          <div className="mb-12">
+          <div className="mb-8 sm:mb-10">
             <StepIndicator steps={steps} currentStep={currentStep} />
           </div>
 

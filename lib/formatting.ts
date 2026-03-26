@@ -1,4 +1,4 @@
-// Formatting utilities for StreamFi
+// Formatting utilities for StreamFi Ventures
 // USD, dates, and other display formats
 
 export function formatUSD(value: number | null | undefined): string {
