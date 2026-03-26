@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CurrencyDisplay } from '@/components/shared/currency-display';
-import { StatusBadge } from '@/components/shared/status-badge';
+import { StatusBadge, type StatusBadgeStatus } from '@/components/shared/status-badge';
 import {
   Search, Target, Percent, Users, ArrowRight, Film,
   TrendingUp, Calendar, FileText, DollarSign
@@ -21,7 +21,26 @@ import {
   investorCardClass,
 } from '@/components/investor/investor-density';
 
-const allDeals = [
+type InvestorDeal = {
+  id: number;
+  title: string;
+  genre: string;
+  status: StatusBadgeStatus;
+  description: string;
+  raiseTarget: number;
+  raised: number;
+  investors: number;
+  valuation: number;
+  revenueShare: number;
+  unitPrice: number;
+  minInvestment: number;
+  fundingStartDate: string;
+  fundingEndDate: string;
+  productionStatus: string;
+  documents: { name: string; size: string }[];
+};
+
+const allDeals: InvestorDeal[] = [
   {
     id: 1,
     title: 'Midnight Heist',

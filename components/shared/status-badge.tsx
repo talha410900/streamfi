@@ -3,8 +3,21 @@
 import { Badge } from '@/components/ui/badge';
 import { getStatusColor } from '@/lib/formatting';
 
+export type StatusBadgeStatus =
+  | 'pending'
+  | 'active'
+  | 'closed'
+  | 'approved'
+  | 'rejected'
+  | 'kyc'
+  | 'questionnaire'
+  | 'documents'
+  | 'open'
+  | 'funded'
+  | 'draft';
+
 interface StatusBadgeProps {
-  status: 'pending' | 'active' | 'closed' | 'approved' | 'rejected' | 'kyc' | 'questionnaire' | 'documents' | 'open' | 'funded' | 'draft';
+  status: StatusBadgeStatus;
   label?: string;
 }
 
