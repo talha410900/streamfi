@@ -6,19 +6,24 @@ import {
   ArrowRight,
   BadgeCheck,
   Building2,
+  ChartBar,
   Clapperboard,
   Eye,
   FileCheck,
   Film,
+  Globe,
   Landmark,
   Link2,
+  Lock,
   Network,
   PieChart,
   Radio,
   Scale,
   Shield,
   Sparkles,
+  TrendingUp,
   UserCheck,
+  Users,
   Wallet,
 } from 'lucide-react';
 
@@ -36,52 +41,85 @@ import { BentoCard, BentoGrid } from '@/components/ui/bento-grid';
 import { DotPattern } from '@/components/ui/dot-pattern';
 import { GridPattern } from '@/components/ui/grid-pattern';
 import { Marquee } from '@/components/ui/marquee';
-import { NumberTicker } from '@/components/ui/number-ticker';
 import { BRAND_NAME } from '@/lib/constants';
 import { ThemeToggle } from '@/components/shared/theme-toggle';
 import { cn } from '@/lib/utils';
+
+const HERO_PILLS = [
+  'StreamScore valuation',
+  'Solana on-chain settlement',
+  'Lookhu production network',
+  'Per-deal SPV structure',
+  'Accredited investors only',
+  'K-1 tax reporting',
+  'AI-powered underwriting',
+  'Wallet-verified distribution',
+] as const;
 
 /** Brand accent for border beams — emerald → teal */
 const BEAM_FROM = '#16a34a';
 const BEAM_TO = '#14b8a6';
 
 const MARQUEE_ITEMS = [
-  'StreamScore valuation',
-  'Solana token units',
-  'Lookhu production',
-  'Lookhu.tv · Prime · Tubi',
-  'Revenue participation',
-  'K-1 & tax packs',
-  'KYC & accreditation',
-  'Deal-by-deal raises',
-  'Wallet-verified mint',
-  'Distribution ledger',
+  'Global streaming market',
+  'OTT original production',
+  'AI-powered valuation',
+  'On-chain settlement',
+  'Premium content demand',
+  'Streaming-first distribution',
+  'Institutional media capital',
+  'Verified token issuance',
+  'Lookhu content network',
+  'Blockchain-native ledger',
 ];
 
-const LIVE_FEED = [
+const INDUSTRY_STATS = [
   {
-    title: 'StreamScore imported',
-    detail: 'Admin posted valuation & raise target for new show deal',
-    time: '4m ago',
-    swatch: 'bg-primary',
+    value: '$500B+',
+    label: 'Global streaming market by 2027',
+    source: 'Statista',
+    Icon: Globe,
   },
   {
-    title: 'Funds confirmed',
-    detail: 'Wire matched — token mint queued for your wallet',
-    time: '22m ago',
-    swatch: 'bg-foreground',
+    value: '4.5B',
+    label: 'Global OTT subscribers by 2026',
+    source: 'Digital TV Research',
+    Icon: Users,
   },
   {
-    title: 'Tokens issued',
-    detail: 'Solana units delivered — revenue % now on-chain',
-    time: '1h ago',
-    swatch: 'bg-primary',
+    value: '38%',
+    label: 'YoY growth in premium content spend',
+    source: 'PwC Media Outlook',
+    Icon: TrendingUp,
   },
   {
-    title: 'Revenue from Lookhu',
-    detail: 'Inbound show revenue received — distribution run scheduled',
-    time: '3h ago',
-    swatch: 'bg-zinc-400 dark:bg-zinc-500',
+    value: '70%',
+    label: 'Fortune 500 brands producing original video',
+    source: 'Deloitte',
+    Icon: ChartBar,
+  },
+] as const;
+
+const TEAM_MEMBERS = [
+  {
+    name: 'Team Member',
+    title: 'Founder & Managing Partner',
+    bio: 'Background in media finance and venture capital. Led content investments across streaming and theatrical.',
+  },
+  {
+    name: 'Team Member',
+    title: 'Head of Deal Origination',
+    bio: 'Former studio executive with experience sourcing and structuring independent film and series deals.',
+  },
+  {
+    name: 'Team Member',
+    title: 'Chief Technology Officer',
+    bio: 'Built investor platforms and blockchain settlement infrastructure across fintech and media verticals.',
+  },
+  {
+    name: 'Team Member',
+    title: 'General Counsel',
+    bio: 'Securities attorney specialising in private placement, Reg D offerings, and digital asset compliance.',
   },
 ] as const;
 
@@ -176,24 +214,24 @@ const ECOSYSTEM_LANES = [
 
 const FAQ_ITEMS = [
   {
-    q: 'What am I investing in?',
-    a: 'Qualified investors subscribe into individual show deals before streaming. Each deal is a discrete raise with its own terms, documents, and Solana-based tokens tied to revenue participation in that project—not a generic fund.',
+    q: `What is ${BRAND_NAME}?`,
+    a: `${BRAND_NAME} is a private investment vehicle that finances individual streaming show deals. Each deal is a discrete capital raise structured for qualified, accredited investors—not a pooled public fund. Participation is by invitation and subject to compliance review.`,
   },
   {
-    q: `How do StreamScore and ${BRAND_NAME} work together?`,
-    a: `StreamScore is a third-party AI-powered media valuation input. ${BRAND_NAME} imports that analysis, then sets final deal economics, raise target, investor revenue share, and tokenized unit structure for the show.`,
+    q: 'How does StreamScore inform deal selection?',
+    a: `StreamScore is a third-party AI-powered media valuation system. ${BRAND_NAME} imports that analysis as an input to its own underwriting process—setting final deal economics, raise size, investor revenue share, and tokenized unit structure before any capital commitment is made.`,
   },
   {
-    q: 'When do I receive tokens?',
-    a: `After your subscription is approved, documents are complete, and ${BRAND_NAME} confirms funds received, the platform transfers tokenized units to your linked Solana wallet per the deal’s unit structure.`,
+    q: 'How does the Lookhu production relationship work?',
+    a: `Lookhu is the production and distribution partner. Committed capital is deployed into Lookhu-led productions, positioned for release across Lookhu.tv, Prime Video, Tubi, and other streaming windows. ${BRAND_NAME} maintains visibility into production spend and distribution milestones.`,
   },
   {
-    q: 'How does money flow back to investors?',
-    a: `Lookhu produces and distributes the show, then sends revenue to ${BRAND_NAME}. ${BRAND_NAME} calculates distributions from token holdings and unit ownership, executes payouts, and keeps an auditable ledger.`,
+    q: 'How are distributions handled?',
+    a: `Show revenue flows to ${BRAND_NAME}, which calculates allocations based on token unit ownership and agreed revenue share per deal. Payouts are processed to verified investor accounts with a full auditable ledger accessible inside the investor dashboard.`,
   },
   {
-    q: 'Where do I see K-1s and signed documents?',
-    a: 'Subscription agreements, KYC confirmations, K-1s, and valuation materials live in your investor documents area—mirrored for admin compliance.',
+    q: 'What is the investor compliance process?',
+    a: `Prospective investors complete identity verification (KYC), an accreditation questionnaire, and subscription documentation. All records are stored and mirrored to the admin compliance view. ${BRAND_NAME} does not accept unverified or unaccredited capital.`,
   },
 ];
 
@@ -212,38 +250,70 @@ function FrameCorners({ className }: { className?: string }) {
   );
 }
 
-/** Layered background “artifacts” for the hero — grids, dots, rings, floating frames */
+/** Animated hero backdrop — concentric rings, grid, particles */
 function HeroBackdrop() {
   return (
     <div
       className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
       aria-hidden
     >
+      {/* Fine grid */}
       <GridPattern
-        width={64}
-        height={64}
-        className="absolute -left-24 top-0 h-[140%] w-[120%] fill-transparent stroke-border/40 opacity-35 md:opacity-45"
+        width={48}
+        height={48}
+        className="absolute inset-0 h-full w-full fill-transparent stroke-border/30 opacity-50"
       />
-      <DotPattern
-        width={22}
-        height={22}
-        cx={1}
-        cy={1}
-        cr={1}
-        glow={false}
-        className="absolute inset-0 text-zinc-400/50 dark:text-zinc-600/35"
+      {/* Radial green glow centred */}
+      <div className="absolute left-1/2 top-1/2 size-[780px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(ellipse_55%_45%_at_50%_50%,hsl(var(--primary)/0.16),transparent_80%)]" />
+      {/* Concentric rings */}
+      {([480, 640, 800, 960] as const).map((size, i) => (
+        <motion.div
+          key={size}
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/10"
+          style={{ width: size, height: size }}
+          initial={{ opacity: 0, scale: 0.88 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.3, delay: 0.12 * i, ease: [0.22, 1, 0.36, 1] }}
+        />
+      ))}
+      {/* Floating orb accents */}
+      <motion.div
+        className="absolute left-[9%] top-[24%] size-3 rounded-full bg-primary/50 shadow-[0_0_0_8px_hsl(var(--primary)/0.08)]"
+        animate={{ y: [0, -12, 0] }}
+        transition={{ duration: 3.6, repeat: Infinity, ease: 'easeInOut' }}
       />
-      <div className="absolute -right-32 top-1/4 size-[28rem] rounded-full border border-primary/15" />
-      <div className="absolute -left-16 bottom-0 size-72 rounded-full border border-border/60 bg-muted/20" />
-      <div className="absolute right-[12%] top-12 size-3 rounded-full bg-primary/40 shadow-[0_0_0_6px_rgba(22,163,74,0.08)]" />
-      <div className="absolute bottom-24 left-[8%] size-2 rounded-full bg-foreground/25" />
-      <div className="absolute right-[20%] bottom-32 h-px w-32 rotate-[-18deg] bg-border/80" />
-      <div className="absolute left-[15%] top-1/3 h-16 w-16 rotate-12 rounded-lg border border-dashed border-primary/25" />
-      <div className="absolute right-[8%] top-[40%] size-12 rotate-6 rounded-md border border-border/70 bg-card/40 shadow-sm" />
+      <motion.div
+        className="absolute right-[11%] top-[20%] size-2 rounded-full bg-primary/40"
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
+      />
+      <motion.div
+        className="absolute left-[20%] bottom-[22%] size-1.5 rounded-full bg-primary/35"
+        animate={{ y: [0, -7, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
+      />
+      <motion.div
+        className="absolute right-[20%] bottom-[25%] size-2.5 rounded-full bg-primary/30"
+        animate={{ y: [0, 9, 0] }}
+        transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut', delay: 1.8 }}
+      />
+      {/* Rotating geometric accents */}
+      <motion.div
+        className="absolute left-[5%] top-[28%] h-14 w-14 rounded-lg border border-dashed border-primary/20"
+        animate={{ rotate: [0, 8, 0] }}
+        transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.div
+        className="absolute right-[5%] bottom-[22%] h-10 w-10 rounded-md border border-border/50 bg-card/25 shadow-sm"
+        animate={{ rotate: [0, -5, 0] }}
+        transition={{ duration: 7.5, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
+      />
+      {/* Horizontal shimmer lines */}
+      <div className="absolute left-1/2 top-0 h-px w-[700px] -translate-x-1/2 bg-linear-to-r from-transparent via-primary/18 to-transparent" />
+      <div className="absolute bottom-0 left-1/2 h-px w-[500px] -translate-x-1/2 bg-linear-to-r from-transparent via-border/50 to-transparent" />
     </div>
   );
 }
-
 /** Animated SVG — capital flowing between hubs (no WebGL) */
 function BentoCapitalRailsVisual() {
   const paths = [
@@ -528,51 +598,6 @@ function BeamCard({
   );
 }
 
-function ActivityCard({
-  title,
-  detail,
-  time,
-  swatch,
-}: (typeof LIVE_FEED)[number]) {
-  return (
-    <figure
-      className={cn(
-        'relative w-full max-w-88 cursor-default overflow-hidden rounded-xl border border-border bg-card p-4 shadow-sm',
-        'transition-transform duration-200 hover:scale-[1.005]'
-      )}
-    >
-      <div className="flex items-start gap-3">
-        <div
-          className={cn('mt-0.5 size-2.5 shrink-0 rounded-sm', swatch)}
-          aria-hidden
-        />
-        <div className="min-w-0 flex-1">
-          <figcaption className="flex flex-wrap items-baseline gap-x-2 text-sm font-medium tracking-tight text-foreground">
-            <span>{title}</span>
-            <span className="text-xs font-normal text-muted-foreground">
-              {time}
-            </span>
-          </figcaption>
-          <p className="mt-1 text-sm text-muted-foreground">{detail}</p>
-        </div>
-      </div>
-    </figure>
-  );
-}
-
-const feedContainer = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.12 },
-  },
-};
-
-const feedItem = {
-  hidden: { opacity: 0, y: 10 },
-  show: { opacity: 1, y: 0 },
-};
-
 function WhyStreamFiSection() {
   return (
     <section
@@ -636,6 +661,59 @@ function WhyStreamFiSection() {
             <ArrowRight className="size-3.5" />
           </a>
         </BlurFade>
+      </div>
+    </section>
+  );
+}
+
+function TeamSection() {
+  return (
+    <section
+      id="team"
+      className="relative z-10 border-t border-border py-20"
+    >
+      <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-25">
+        <DotPattern
+          width={20}
+          height={20}
+          cx={1}
+          cy={1}
+          cr={1}
+          glow={false}
+          className="text-muted-foreground/60"
+        />
+      </div>
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
+        <BlurFade inView>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+            Leadership
+          </p>
+          <h2 className="mt-2 max-w-xl text-3xl font-semibold tracking-tight sm:text-4xl">
+            The team behind the fund
+          </h2>
+          <p className="mt-3 max-w-2xl text-lg text-muted-foreground">
+            Operators and advisors with deep experience in media finance, content
+            production, and institutional capital markets.
+          </p>
+        </BlurFade>
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {TEAM_MEMBERS.map((member, i) => (
+            <BlurFade key={member.name + i} inView delay={0.06 * i}>
+              <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/90 bg-card p-6 shadow-sm">
+                <div className="mb-5 flex size-14 items-center justify-center rounded-2xl border border-border bg-muted text-muted-foreground">
+                  <Users className="size-6" aria-hidden />
+                </div>
+                <h3 className="text-base font-semibold tracking-tight text-foreground">
+                  {member.name}
+                </h3>
+                <p className="mt-0.5 text-sm font-medium text-primary">{member.title}</p>
+                <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
+                  {member.bio}
+                </p>
+              </div>
+            </BlurFade>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -758,6 +836,12 @@ export function StreamFiLanding() {
               Why
             </a>
             <a
+              href="#team"
+              className="hidden px-2 text-sm text-muted-foreground transition-colors hover:text-foreground xl:inline"
+            >
+              Team
+            </a>
+            <a
               href="#ecosystem"
               className="hidden px-2 text-sm text-muted-foreground transition-colors hover:text-foreground xl:inline"
             >
@@ -780,14 +864,9 @@ export function StreamFiLanding() {
                 </Link>
               </Button>
             ) : (
-              <>
-                <Button variant="ghost" asChild size="sm" className="rounded-md">
-                  <Link href="/login">Sign in</Link>
-                </Button>
-                <Button asChild size="sm" className="rounded-md">
-                  <Link href="/signup">Get started</Link>
-                </Button>
-              </>
+              <Button asChild size="sm" className="ml-1 rounded-md">
+                <Link href="/login">Member sign in</Link>
+              </Button>
             )}
           </nav>
         </div>
@@ -796,141 +875,157 @@ export function StreamFiLanding() {
       <main>
         <section
           id="platform"
-          className="relative z-10 overflow-hidden border-b border-border/50"
+          className="relative z-10 overflow-hidden border-b border-border/50 pb-0"
         >
           <HeroBackdrop />
-          <div className="relative z-10 mx-auto max-w-6xl px-4 pb-14 pt-10 sm:px-6 sm:pt-14">
-            <FrameCorners className="opacity-70" />
-            <div className="relative z-1 grid gap-10 lg:grid-cols-12 lg:items-start lg:gap-10">
-            <div className="lg:col-span-7">
-              <BlurFade delay={0.05} inView>
-                <p className="text-sm font-medium tracking-wide text-primary">
-                  Before the premiere — after the wire.
-                </p>
-              </BlurFade>
-              <BlurFade delay={0.08} inView>
-                <h1 className="mt-2 text-balance text-2xl font-semibold tracking-tight sm:text-3xl lg:text-[1.85rem] lg:leading-snug">
-                  Fund shows before they stream. One deal per show—Solana units,
-                  Lookhu production, revenue back to you.
-                </h1>
-              </BlurFade>
-              <BlurFade delay={0.1} inView>
-                <p className="mt-2 inline-flex items-center gap-2 rounded-full border border-border bg-card px-2.5 py-1 text-xs font-medium text-muted-foreground shadow-sm">
-                  <BadgeCheck className="size-3.5 text-primary" aria-hidden />
-                  Qualified investors · Accredited access
-                </p>
-              </BlurFade>
-              <BlurFade delay={0.12} inView>
-                <p className="mt-4 max-w-lg text-pretty text-sm leading-relaxed text-muted-foreground sm:text-[15px]">
-                  Subscribe per show, clear KYC and docs, fund {BRAND_NAME}, receive
-                  tokenized revenue participation on Solana. Lookhu produces;
-                  cash flows from distribution → {BRAND_NAME} → holders—with K-1–ready
-                  records.
-                </p>
-              </BlurFade>
-              <BlurFade delay={0.14} inView>
-                <div className="mt-7 flex flex-wrap gap-3">
-                  <Button asChild size="lg" className="rounded-md px-5">
-                    <Link href="/signup">
-                      Start onboarding
-                      <ArrowRight className="size-4" />
-                    </Link>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    asChild
-                    size="lg"
-                    className="rounded-md border-border bg-card px-5 shadow-sm"
-                  >
-                    <Link href="/login">Sign in</Link>
-                  </Button>
-                </div>
-              </BlurFade>
+          <div className="relative z-10 mx-auto max-w-6xl px-4 pt-14 sm:px-6 sm:pt-16 pb-0">
+            <FrameCorners className="opacity-60" />
 
-              <BlurFade delay={0.16} inView className="mt-10">
-                <div className="grid max-w-lg grid-cols-3 gap-5 border-t border-border pt-8">
-                  <div>
-                    <p className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                      <span className="text-primary">$</span>
-                      <NumberTicker
-                        value={48}
-                        className="font-semibold text-foreground!"
-                      />
-                      <span className="text-muted-foreground">M+</span>
-                    </p>
-                    <p className="mt-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                      Capital coordinated
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                      <NumberTicker
-                        value={120}
-                        className="font-semibold text-foreground!"
-                      />
-                      <span className="text-muted-foreground">+</span>
-                    </p>
-                    <p className="mt-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                      Show deals
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                      <NumberTicker
-                        value={24}
-                        className="font-semibold text-foreground!"
-                      />
-                      <span className="text-muted-foreground">/7</span>
-                    </p>
-                    <p className="mt-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                      Ledger
-                    </p>
-                  </div>
-                </div>
-              </BlurFade>
+            {/* Badge */}
+            <div className="flex justify-center">
+              <motion.span
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/[0.07] px-3.5 py-1.5 text-[11px] font-medium tracking-wide text-primary shadow-sm"
+              >
+                <span className="relative flex size-2">
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary/40 opacity-75" />
+                  <span className="relative inline-flex size-2 rounded-full bg-primary" />
+                </span>
+                Private · Qualified investors only
+              </motion.span>
             </div>
 
-            <div className="relative z-1 lg:col-span-5">
-              <BeamCard className="shadow-md" duration={9}>
-                <div className="border-b border-border bg-muted/40 px-4 py-3">
-                  <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Live surface
-                  </p>
-                  <p className="text-sm font-medium text-foreground">
-                    What is moving on the platform
-                  </p>
-                </div>
-                <div className="p-3 sm:p-4">
-                  <motion.div
-                    className="flex flex-col gap-2.5"
-                    variants={feedContainer}
-                    initial="hidden"
-                    animate="show"
-                  >
-                    {LIVE_FEED.map((item) => (
-                      <motion.div key={item.title} variants={feedItem}>
-                        <ActivityCard {...item} />
-                      </motion.div>
-                    ))}
-                  </motion.div>
-                </div>
-              </BeamCard>
-              <div
-                className="pointer-events-none absolute -right-4 -top-4 hidden size-20 rounded-2xl border-2 border-dashed border-primary/40 md:block"
-                aria-hidden
-              />
-              <div
-                className="pointer-events-none absolute -bottom-2 -left-2 hidden size-14 rounded-lg border border-border bg-card shadow-sm md:block"
-                aria-hidden
-              />
+            {/* Headline */}
+            <div className="mx-auto mt-8 max-w-2xl text-center">
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl lg:text-[3.5rem] lg:leading-[1.1]"
+              >
+                Streaming capital,{' '}
+                <span className="relative whitespace-nowrap text-primary">
+                  structured privately
+                </span>
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                className="mx-auto mt-5 max-w-lg text-pretty text-base leading-relaxed text-muted-foreground sm:text-[17px]"
+              >
+                Show-by-show raises for qualified investors—AI-validated, Lookhu-produced,
+                and settled on-chain. Access by invitation only.
+              </motion.p>
+
+              {/* CTAs */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, delay: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                className="mt-9 flex flex-wrap items-center justify-center gap-3"
+              >
+                <Button asChild size="lg" className="rounded-full px-7 shadow-md">
+                  <Link href="/login">
+                    Member sign in
+                    <ArrowRight className="size-4" />
+                  </Link>
+                </Button>
+                <a
+                  href="mailto:invest@streamfiventures.com"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/80 px-6 py-2.5 text-sm font-medium text-muted-foreground shadow-sm backdrop-blur-sm transition-colors hover:text-foreground"
+                >
+                  Institutional inquiries
+                </a>
+              </motion.div>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.55 }}
+                className="mt-3 text-[11px] text-muted-foreground/75"
+              >
+                Access by invitation · Accreditation required
+              </motion.p>
             </div>
+
+            {/* Scrolling pill strip */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="relative mt-14 -mx-4 sm:-mx-6 overflow-hidden"
+            >
+              <div className="absolute inset-y-0 left-0 z-10 w-24 bg-linear-to-r from-background to-transparent" />
+              <div className="absolute inset-y-0 right-0 z-10 w-24 bg-linear-to-l from-background to-transparent" />
+              <Marquee className="py-4 [--duration:35s] [--gap:1rem]">
+                {HERO_PILLS.map((label) => (
+                  <span
+                    key={label}
+                    className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-card/80 px-4 py-2 text-[13px] font-medium text-muted-foreground shadow-sm backdrop-blur-sm"
+                  >
+                    <span className="size-1.5 rounded-full bg-primary/70" aria-hidden />
+                    {label}
+                  </span>
+                ))}
+              </Marquee>
+            </motion.div>
           </div>
+        </section>
+
+        <section
+          id="industry"
+          className="relative z-10 border-b border-border bg-muted/20 py-14 sm:py-16"
+        >
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <BlurFade inView>
+              <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+                Market context
+              </p>
+              <h2 className="mt-2 text-center text-2xl font-semibold tracking-tight sm:text-3xl">
+                Streaming is the defining media shift of the decade
+              </h2>
+              <p className="mx-auto mt-3 max-w-2xl text-center text-base text-muted-foreground">
+                {BRAND_NAME} operates at the intersection of premium content production
+                and structured private capital—in a sector that continues to expand at scale.
+              </p>
+            </BlurFade>
+            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {INDUSTRY_STATS.map((stat, i) => {
+                const StatIcon = stat.Icon;
+                return (
+                  <BlurFade key={stat.label} inView delay={0.06 * i}>
+                    <motion.div
+                      whileHover={{ y: -2 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 28 }}
+                      className="relative overflow-hidden rounded-2xl border border-border/90 bg-card p-6 shadow-sm"
+                    >
+                      <div className="mb-3 flex size-10 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary">
+                        <StatIcon className="size-5" aria-hidden />
+                      </div>
+                      <p className="text-3xl font-semibold tracking-tight text-foreground">
+                        {stat.value}
+                      </p>
+                      <p className="mt-1.5 text-sm leading-snug text-muted-foreground">
+                        {stat.label}
+                      </p>
+                      <p className="mt-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground/60">
+                        Source: {stat.source}
+                      </p>
+                    </motion.div>
+                  </BlurFade>
+                );
+              })}
+            </div>
           </div>
         </section>
 
         <section
           id="ticker"
-          className="relative z-10 border-y border-border bg-muted/30 py-3.5"
+          className="relative z-10 border-b border-border bg-muted/30 py-3.5"
         >
           <Marquee pauseOnHover className="[--duration:50s] [--gap:3rem] py-1">
             {MARQUEE_ITEMS.map((label) => (
@@ -994,8 +1089,8 @@ export function StreamFiLanding() {
                   name="Trust & accreditation"
                   className="col-span-12 lg:col-span-4"
                   description="KYC, investor questionnaires, and subscription packets with mirrored status for admins—so compliance isn’t a side spreadsheet."
-                  href="/signup"
-                  cta="Start investor profile"
+                  href="#faq"
+                  cta="Compliance process"
                   Icon={UserCheck}
                   featured
                   background={
@@ -1142,6 +1237,8 @@ export function StreamFiLanding() {
 
         <WhyStreamFiSection />
 
+        <TeamSection />
+
         <section
           id="flow"
           className="relative z-10 border-t border-border bg-muted/15 py-20"
@@ -1210,22 +1307,33 @@ export function StreamFiLanding() {
           <BlurFade inView>
             <BeamCard className="shadow-lg" duration={10}>
               <div className="px-6 py-12 text-center sm:px-12">
-                <Wallet className="mx-auto size-10 text-primary" aria-hidden />
+                <span className="inline-flex items-center justify-center rounded-full border border-primary/20 bg-primary/10 p-3">
+                  <Lock className="size-6 text-primary" aria-hidden />
+                </span>
                 <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
-                  Open your investor workspace
+                  Existing member? Access your workspace.
                 </h2>
                 <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
-                  Onboard, subscribe show-by-show, connect your Solana wallet, and
-                  follow distributions and tax documents in one place.
+                  Your portfolio, deal documents, distributions, and tax records
+                  are available inside the investor dashboard.
                 </p>
                 <div className="mt-8 flex flex-wrap justify-center gap-3">
                   <Button asChild size="lg" className="rounded-md px-8">
-                    <Link href="/signup">Get started</Link>
-                  </Button>
-                  <Button variant="outline" asChild size="lg" className="rounded-md">
-                    <Link href="/login">Sign in</Link>
+                    <Link href="/login">
+                      Member sign in
+                      <ArrowRight className="size-4" />
+                    </Link>
                   </Button>
                 </div>
+                <p className="mt-5 text-sm text-muted-foreground">
+                  Not yet a member?{' '}
+                  <a
+                    href="mailto:invest@streamfiventures.com"
+                    className="font-medium text-primary underline-offset-2 hover:underline"
+                  >
+                    Contact us for institutional inquiries
+                  </a>
+                </p>
                 <p className="mx-auto mt-6 max-w-lg text-xs text-muted-foreground">
                   Investing involves risk, including possible loss of principal.
                   Past performance does not guarantee future results. Streaming
@@ -1246,13 +1354,16 @@ export function StreamFiLanding() {
           </p>
           <div className="flex gap-6">
             <Link href="/login" className="hover:text-foreground">
-              Sign in
-            </Link>
-            <Link href="/signup" className="hover:text-foreground">
-              Sign up
+              Member sign in
             </Link>
             <a href="#faq" className="hover:text-foreground">
               FAQ
+            </a>
+            <a
+              href="mailto:invest@streamfiventures.com"
+              className="hover:text-foreground"
+            >
+              Contact
             </a>
           </div>
         </div>
