@@ -87,7 +87,7 @@ export default function InvestorDocumentsPage() {
   return (
     <div className={investorDensity.page}>
       <DashboardPageHeader
-        title="Documents"
+        title="My Documents"
         description="Subscriptions, KYC, questionnaires, valuations, and K-1s in one library."
       />
 
@@ -220,7 +220,7 @@ export default function InvestorDocumentsPage() {
             <CardContent className={investorDensity.cardContentSection}>
               <div className="mb-3 rounded-lg border border-yellow-200 bg-yellow-50 p-3 dark:border-yellow-900 dark:bg-yellow-950/30 sm:p-3.5">
                 <div className="flex gap-2">
-                  <AlertCircle className="size-5 text-yellow-600 flex-shrink-0" />
+                  <AlertCircle className="size-5 text-yellow-600 shrink-0" />
                   <div>
                     <p className="font-medium text-yellow-900 dark:text-yellow-300">Tax Season Reminder</p>
                     <p className="text-sm text-yellow-700 dark:text-yellow-400 mt-1">

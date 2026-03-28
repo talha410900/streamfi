@@ -11,7 +11,7 @@ import { Modal } from '@/components/shared/modal';
 import { DateDisplay } from '@/components/shared/date-display';
 import {
   Upload, Download, FileText, FileCheck, FileWarning, Search,
-  FileSignature, FileChartLine, Film, Receipt
+  FileSignature, FileChartLine, Film, Receipt, Users, TrendingUp,
 } from 'lucide-react';
 import { DashboardPageHeader } from '@/components/shared/dashboard-page-header';
 import { cn } from '@/lib/utils';
@@ -34,6 +34,8 @@ const mockDocuments = [
   { id: 5, name: 'Midnight Heist Valuation Report Q1 2026.pdf', type: 'valuation', deal: 'Midnight Heist', investor: '-', size: '1.8 MB', uploaded_at: '2026-03-15', status: 'active' },
   { id: 6, name: 'K-1 Statement 2025 - John Investor.pdf', type: 'k1', deal: 'Last Dance', investor: 'John Investor', size: '245 KB', uploaded_at: '2026-02-28', status: 'sent' },
   { id: 7, name: 'Show Script - Last Dance v2.pdf', type: 'show_document', deal: 'Last Dance', investor: '-', size: '4.2 MB', uploaded_at: '2026-02-15', status: 'active' },
+  { id: 8, name: 'Subscription Agreement - Sarah Williams.pdf', type: 'subscription_agreement', deal: 'Last Dance', investor: 'Sarah Williams', size: '158 KB', uploaded_at: '2026-02-10', status: 'signed' },
+  { id: 9, name: 'KYC Documents - Jane Smith.zip', type: 'kyc', deal: '-', investor: 'Jane Smith', size: '1.9 MB', uploaded_at: '2026-01-20', status: 'verified' },
 ];
 
 const mockDeals = [
@@ -45,6 +47,7 @@ const mockInvestors = [
   { id: 1, name: 'John Investor' },
   { id: 2, name: 'Jane Smith' },
   { id: 3, name: 'Robert Jones' },
+  { id: 4, name: 'Sarah Williams' },
 ];
 
 function getStatusBadge(status: string) {
@@ -56,12 +59,12 @@ function getStatusBadge(status: string) {
     active: { label: 'Active', variant: 'default' },
     sent: { label: 'Sent', variant: 'default' },
   };
-  const config = statusConfig[status] || { label: status, variant: 'outline' };
+  const config = statusConfig[status] || { label: status, variant: 'outline' as const };
   return <Badge variant={config.variant}>{config.label}</Badge>;
 }
 
 function getTypeIcon(type: string) {
-  const docType = DOCUMENT_TYPES.find(t => t.value === type);
+  const docType = DOCUMENT_TYPES.find((t) => t.value === type);
   if (docType) {
     const Icon = docType.icon;
     return <Icon className="size-5 text-muted-foreground" />;
@@ -70,14 +73,13 @@ function getTypeIcon(type: string) {
 }
 
 export default function AdminDocumentsPage() {
-  const [documents, setDocuments] = useState(mockDocuments);
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [dealFilter, setDealFilter] = useState('all');
   const [investorFilter, setInvestorFilter] = useState('all');
   const [isUploading, setIsUploading] = useState(false);
 
-  const filteredDocuments = documents.filter(doc => {
+  const filteredDocuments = mockDocuments.filter((doc) => {
     const matchesSearch = doc.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesType = typeFilter === 'all' || doc.type === typeFilter;
     const matchesDeal = dealFilter === 'all' || doc.deal === dealFilter;
@@ -85,15 +87,17 @@ export default function AdminDocumentsPage() {
     return matchesSearch && matchesType && matchesDeal && matchesInvestor;
   });
 
-  const handleUpload = (data: any) => {
-    console.log('Upload document:', data);
-    setIsUploading(false);
-  };
+  const investorDocs = mockInvestors.map((inv) => ({
+    ...inv,
+    documents: mockDocuments.filter((d) => d.investor === inv.name),
+    docCount: mockDocuments.filter((d) => d.investor === inv.name).length,
+  }));
 
-  const groupedByType = DOCUMENT_TYPES.map(type => ({
-    type,
-    documents: documents.filter(d => d.type === type.value),
-  })).filter(g => g.documents.length > 0);
+  const dealDocs = mockDeals.map((deal) => ({
+    ...deal,
+    documents: mockDocuments.filter((d) => d.deal === deal.title),
+    docCount: mockDocuments.filter((d) => d.deal === deal.title).length,
+  }));
 
   return (
     <div className={adminDensity.page}>
@@ -108,10 +112,11 @@ export default function AdminDocumentsPage() {
         }
       />
 
+      {/* Filters */}
       <Card className={adminCardClass()}>
         <CardContent className={cn('pt-3', adminDensity.cardContent)}>
           <div className="flex flex-wrap gap-3">
-            <div className="flex-1 min-w-[200px]">
+            <div className="min-w-[200px] flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                 <Input
@@ -128,7 +133,7 @@ export default function AdminDocumentsPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Types</SelectItem>
-                {DOCUMENT_TYPES.map(type => (
+                {DOCUMENT_TYPES.map((type) => (
                   <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
                 ))}
               </SelectContent>
@@ -139,7 +144,7 @@ export default function AdminDocumentsPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Deals</SelectItem>
-                {mockDeals.map(deal => (
+                {mockDeals.map((deal) => (
                   <SelectItem key={deal.id} value={deal.title}>{deal.title}</SelectItem>
                 ))}
               </SelectContent>
@@ -150,8 +155,8 @@ export default function AdminDocumentsPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Investors</SelectItem>
-                {mockInvestors.map(investor => (
-                  <SelectItem key={investor.id} value={investor.name}>{investor.name}</SelectItem>
+                {mockInvestors.map((inv) => (
+                  <SelectItem key={inv.id} value={inv.name}>{inv.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -162,7 +167,8 @@ export default function AdminDocumentsPage() {
       <Tabs defaultValue="all" className="w-full">
         <TabsList>
           <TabsTrigger value="all">All Documents</TabsTrigger>
-          <TabsTrigger value="by-type">By Type</TabsTrigger>
+          <TabsTrigger value="by-investor">By Investor</TabsTrigger>
+          <TabsTrigger value="by-deal">By Deal</TabsTrigger>
           <TabsTrigger value="pending">Pending Actions</TabsTrigger>
         </TabsList>
 
@@ -199,7 +205,7 @@ export default function AdminDocumentsPage() {
                           </div>
                         </td>
                         <td className={cn('text-muted-foreground', adminDensity.tableCell)}>
-                          {DOCUMENT_TYPES.find(t => t.value === doc.type)?.label || doc.type}
+                          {DOCUMENT_TYPES.find((t) => t.value === doc.type)?.label || doc.type}
                         </td>
                         <td className={adminDensity.tableCell}>{doc.deal}</td>
                         <td className={adminDensity.tableCell}>{doc.investor}</td>
@@ -221,45 +227,105 @@ export default function AdminDocumentsPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="by-type" className="mt-3">
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4 lg:grid-cols-3">
-            {DOCUMENT_TYPES.map((type) => {
-              const docs = documents.filter(d => d.type === type.value);
-              const Icon = type.icon;
-              return (
-                <Card key={type.value} className={cn('border border-border', adminCardClass())}>
-                  <CardHeader className={cn('flex flex-row items-center justify-between pb-2', adminDensity.cardHeader)}>
-                    <CardTitle className="flex items-center gap-2 text-sm font-medium">
-                      <Icon className="size-4" />
-                      {type.label}
-                    </CardTitle>
-                    <Badge variant="secondary">{docs.length}</Badge>
-                  </CardHeader>
-                  <CardContent className={adminDensity.cardContent}>
-                    {docs.length === 0 ? (
-                      <p className="text-xs text-muted-foreground">No documents</p>
-                    ) : (
-                      <div className="flex flex-col gap-2">
-                        {docs.slice(0, 3).map(doc => (
-                          <div key={doc.id} className="flex items-center justify-between p-2 bg-card rounded text-xs">
-                            <span className="truncate max-w-[150px]">{doc.name}</span>
-                            <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                              <Download className="size-3" />
+        {/* By Investor */}
+        <TabsContent value="by-investor" className="mt-3">
+          <div className="flex flex-col gap-4">
+            {investorDocs.map((inv) => (
+              <Card key={inv.id} className={adminCardClass()}>
+                <CardHeader className={cn('flex flex-row items-center justify-between', adminDensity.cardHeader)}>
+                  <div className="flex items-center gap-2">
+                    <div className="flex size-8 items-center justify-center rounded-full bg-muted">
+                      <Users className="size-4 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-base">{inv.name}</CardTitle>
+                      <CardDescription>{inv.docCount} documents on file</CardDescription>
+                    </div>
+                  </div>
+                  <Badge variant="secondary">{inv.docCount}</Badge>
+                </CardHeader>
+                <CardContent className={adminDensity.cardContent}>
+                  {inv.documents.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">No documents</p>
+                  ) : (
+                    <div className="flex flex-col gap-1.5">
+                      {inv.documents.map((doc) => (
+                        <div key={doc.id} className="flex items-center justify-between rounded-md bg-card p-2.5">
+                          <div className="flex items-center gap-2">
+                            {getTypeIcon(doc.type)}
+                            <div>
+                              <p className="text-sm font-medium">{doc.name}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {doc.size} · {doc.deal !== '-' ? doc.deal : 'General'} · <DateDisplay date={doc.uploaded_at} />
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {getStatusBadge(doc.status)}
+                            <Button variant="ghost" size="sm" className="size-8 p-0">
+                              <Download className="size-3.5" />
                             </Button>
                           </div>
-                        ))}
-                        {docs.length > 3 && (
-                          <p className="text-xs text-muted-foreground">+{docs.length - 3} more</p>
-                        )}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              );
-            })}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </TabsContent>
 
+        {/* By Deal */}
+        <TabsContent value="by-deal" className="mt-3">
+          <div className="flex flex-col gap-4">
+            {dealDocs.map((deal) => (
+              <Card key={deal.id} className={adminCardClass()}>
+                <CardHeader className={cn('flex flex-row items-center justify-between', adminDensity.cardHeader)}>
+                  <div className="flex items-center gap-2">
+                    <div className="flex size-8 items-center justify-center rounded-full bg-muted">
+                      <TrendingUp className="size-4 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-base">{deal.title}</CardTitle>
+                      <CardDescription>{deal.docCount} documents</CardDescription>
+                    </div>
+                  </div>
+                  <Badge variant="secondary">{deal.docCount}</Badge>
+                </CardHeader>
+                <CardContent className={adminDensity.cardContent}>
+                  {deal.documents.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">No documents</p>
+                  ) : (
+                    <div className="flex flex-col gap-1.5">
+                      {deal.documents.map((doc) => (
+                        <div key={doc.id} className="flex items-center justify-between rounded-md bg-card p-2.5">
+                          <div className="flex items-center gap-2">
+                            {getTypeIcon(doc.type)}
+                            <div>
+                              <p className="text-sm font-medium">{doc.name}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {doc.size} · {doc.investor !== '-' ? doc.investor : 'Deal-level'} · <DateDisplay date={doc.uploaded_at} />
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {getStatusBadge(doc.status)}
+                            <Button variant="ghost" size="sm" className="size-8 p-0">
+                              <Download className="size-3.5" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
+        {/* Pending Actions */}
         <TabsContent value="pending" className="mt-3">
           <Card className={adminCardClass()}>
             <CardHeader className={adminDensity.cardHeader}>
@@ -267,16 +333,16 @@ export default function AdminDocumentsPage() {
               <CardDescription>Documents pending signature, review, or verification</CardDescription>
             </CardHeader>
             <CardContent className={adminDensity.cardContent}>
-              {filteredDocuments.filter(d => d.status.includes('pending')).length === 0 ? (
+              {mockDocuments.filter((d) => d.status.includes('pending')).length === 0 ? (
                 <div className="py-6 text-center text-muted-foreground">
                   <FileCheck className="mx-auto mb-2 size-10 opacity-50" />
                   <p>All documents are up to date</p>
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
-                  {filteredDocuments
-                    .filter(d => d.status.includes('pending'))
-                    .map(doc => (
+                  {mockDocuments
+                    .filter((d) => d.status.includes('pending'))
+                    .map((doc) => (
                       <div key={doc.id} className="flex items-center justify-between rounded-lg border border-border bg-card p-3">
                         <div className="flex items-center gap-2">
                           {getTypeIcon(doc.type)}
@@ -319,47 +385,47 @@ export default function AdminDocumentsPage() {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-sm font-medium mb-1 block">Document Type</label>
+              <label className="mb-1 block text-sm font-medium">Document Type</label>
               <Select>
                 <SelectTrigger>
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {DOCUMENT_TYPES.map(type => (
+                  {DOCUMENT_TYPES.map((type) => (
                     <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 block">Associated Deal</label>
+              <label className="mb-1 block text-sm font-medium">Associated Deal</label>
               <Select>
                 <SelectTrigger>
                   <SelectValue placeholder="Select deal (optional)" />
                 </SelectTrigger>
                 <SelectContent>
-                  {mockDeals.map(deal => (
+                  {mockDeals.map((deal) => (
                     <SelectItem key={deal.id} value={deal.title}>{deal.title}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="col-span-2">
-              <label className="text-sm font-medium mb-1 block">Associated Investor</label>
+              <label className="mb-1 block text-sm font-medium">Associated Investor</label>
               <Select>
                 <SelectTrigger>
                   <SelectValue placeholder="Select investor (optional)" />
                 </SelectTrigger>
                 <SelectContent>
-                  {mockInvestors.map(investor => (
-                    <SelectItem key={investor.id} value={investor.name}>{investor.name}</SelectItem>
+                  {mockInvestors.map((inv) => (
+                    <SelectItem key={inv.id} value={inv.name}>{inv.name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
           </div>
           <div className="flex gap-2 pt-2">
-            <Button onClick={handleUpload}>Upload</Button>
+            <Button onClick={() => setIsUploading(false)}>Upload</Button>
             <Button variant="outline" onClick={() => setIsUploading(false)}>Cancel</Button>
           </div>
         </div>

@@ -13,6 +13,7 @@ import { DateDisplay } from '@/components/shared/date-display';
 import { StatusBadge } from '@/components/shared/status-badge';
 import { Modal } from '@/components/shared/modal';
 import { InvestmentFlowModal } from '@/components/investor/investment-flow-modal';
+import { FundFlowDiagram } from '@/components/shared/fund-flow-diagram';
 import {
   ArrowLeft, FileText, Download, Target, Percent, Users, Calendar,
   Film, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock,
@@ -309,6 +310,75 @@ export default function DealDetailPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Fund Flow */}
+          <Card className={investorCardClass()}>
+            <CardHeader className={investorDensity.cardHeader}>
+              <CardTitle className="text-base">Fund Flow</CardTitle>
+              <CardDescription>How your investment and revenue flows</CardDescription>
+            </CardHeader>
+            <CardContent className={investorDensity.cardContentSection}>
+              <div className="flex flex-col gap-4">
+                <div>
+                  <p className="mb-2 text-xs font-medium text-muted-foreground">Investment Flow</p>
+                  <FundFlowDiagram direction="investment" amount={deal.minInvestment} />
+                </div>
+                <div>
+                  <p className="mb-2 text-xs font-medium text-muted-foreground">Revenue Distribution</p>
+                  <FundFlowDiagram direction="revenue" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Distribution Projections */}
+          <Card className={investorCardClass()}>
+            <CardHeader className={investorDensity.cardHeader}>
+              <CardTitle className="text-base">Distribution Projections</CardTitle>
+              <CardDescription>Estimated returns based on revenue share structure</CardDescription>
+            </CardHeader>
+            <CardContent className={investorDensity.cardContentSection}>
+              <div className="rounded-lg border border-border bg-card p-3 sm:p-3.5">
+                <div className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
+                  <div>
+                    <p className="text-xs text-muted-foreground">Revenue Share</p>
+                    <p className="font-semibold">{deal.revenueShare}%</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Total Units</p>
+                    <p className="font-semibold">{deal.totalUnits.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Unit Price</p>
+                    <p className="font-semibold"><CurrencyDisplay amount={deal.unitPrice} /></p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Fee Structure</p>
+                    <p className="font-semibold">15% (10% + 5%)</p>
+                  </div>
+                </div>
+                <div className="mt-3 border-t border-border pt-3">
+                  <p className="mb-2 text-xs text-muted-foreground">Example: If show generates $100,000 in gross revenue</p>
+                  <div className="flex flex-col gap-1 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">After fees (85%)</span>
+                      <span className="tabular-nums">$85,000</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Investor pool ({deal.revenueShare}%)</span>
+                      <span className="tabular-nums">${(85000 * deal.revenueShare / 100).toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between font-semibold text-chart-1">
+                      <span>Per unit distribution</span>
+                      <span className="tabular-nums">
+                        ${((85000 * deal.revenueShare / 100) / deal.totalUnits).toFixed(4)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>

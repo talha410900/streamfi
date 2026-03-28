@@ -147,12 +147,12 @@ export function LoginForm() {
         </div>
       </div>
 
-      {/* Signup Link */}
+      {/* Private Fund Notice */}
       <p className="text-center text-sm text-muted-foreground">
-        Don&apos;t have an account?{' '}
-        <Link href="/signup" className="text-primary font-semibold hover:text-primary/80 transition-colors">
-          Create account
-        </Link>
+        StreamFi Ventures is a private fund. Investor accounts are created by
+        your fund administrator. Contact{' '}
+        <span className="text-primary font-medium">support@streamfi.com</span>{' '}
+        for access.
       </p>
     </div>
   );

@@ -32,10 +32,10 @@ export default function LoginPage() {
 
           <div className="flex flex-col gap-6 max-w-lg">
             <h2 className="text-4xl font-bold text-foreground leading-tight">
-              Invest in Premium Streaming Content
+              Private Fund Portal
             </h2>
             <p className="text-muted-foreground text-lg">
-              Join a growing community of investors discovering unique opportunities in the entertainment industry.
+              Access your investment portfolio, track distributions, and manage your entertainment revenue participation holdings.
             </p>
           </div>
         </div>

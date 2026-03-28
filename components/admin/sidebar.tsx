@@ -6,10 +6,11 @@ import {
   LayoutDashboard,
   TrendingUp,
   Users,
+  FolderOpen,
   Coins,
   DollarSign,
   Share2,
-  FileText,
+  FileSpreadsheet,
   Settings,
   LogOut,
 } from 'lucide-react';
@@ -24,11 +25,11 @@ export function AdminSidebar() {
     { icon: LayoutDashboard, label: 'Dashboard', href: '/admin/dashboard' },
     { icon: TrendingUp, label: 'Deals', href: '/admin/deals' },
     { icon: Users, label: 'Investors', href: '/admin/investors' },
+    { icon: FolderOpen, label: 'Documents', href: '/admin/documents' },
     { icon: Coins, label: 'Tokens', href: '/admin/tokens' },
     { icon: DollarSign, label: 'Revenue', href: '/admin/revenue' },
     { icon: Share2, label: 'Distributions', href: '/admin/distributions' },
-    { icon: FileText, label: 'Documents', href: '/admin/documents' },
-    { icon: FileText, label: 'Tax Documents', href: '/admin/tax-documents' },
+    { icon: FileSpreadsheet, label: 'Tax Docs', href: '/admin/tax-documents' },
     { icon: Settings, label: 'Settings', href: '/admin/settings' },
   ];
 

@@ -218,6 +218,14 @@ export default function DealDetailPage() {
                     <p className="text-sm font-medium">{deal.revenue_share_percentage}%</p>
                   </div>
                 </div>
+                <div className="mt-2 rounded-lg border border-border bg-muted/30 p-3">
+                  <p className="mb-1 text-xs font-medium text-muted-foreground">One Deal = One Show = One Token</p>
+                  <p className="text-xs text-muted-foreground">
+                    This deal represents the show &quot;{deal.title}&quot; with its own token
+                    ({deal.token_symbol}) and unit structure. Tokens represent ownership in the
+                    revenue participation structure.
+                  </p>
+                </div>
               </CardContent>
             </Card>
 
@@ -257,6 +265,41 @@ export default function DealDetailPage() {
               </CardContent>
             </Card>
           </div>
+
+          {/* Deal Progress Timeline */}
+          <Card className={cn('mt-4', adminCardClass())}>
+            <CardHeader className={adminDensity.cardHeader}>
+              <CardTitle className="text-base">Deal Progress Updates</CardTitle>
+              <CardDescription>Activity feed and milestones</CardDescription>
+            </CardHeader>
+            <CardContent className={adminDensity.cardContent}>
+              <div className="flex flex-col gap-3">
+                {[
+                  { date: '2026-03-20', title: 'Revenue Distribution Processed', detail: '$5,000 distributed to 12 investors' },
+                  { date: '2026-03-15', title: 'Casting Confirmed', detail: 'Lead actors confirmed for principal photography' },
+                  { date: '2026-03-01', title: 'Location Secured', detail: 'NYC filming locations locked for pre-production' },
+                  { date: '2026-02-01', title: 'Deal Opened', detail: 'Investment round opened for accredited investors' },
+                  { date: '2026-01-15', title: 'Deal Created', detail: 'Midnight Heist deal created on StreamFi platform' },
+                ].map((update, idx) => (
+                  <div key={idx} className="flex gap-3">
+                    <div className="flex flex-col items-center">
+                      <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                        <div className="size-2 rounded-full bg-primary" />
+                      </div>
+                      {idx < 4 && <div className="mt-1 h-full w-px bg-border" />}
+                    </div>
+                    <div className="pb-3">
+                      <p className="text-sm font-medium">{update.title}</p>
+                      <p className="text-xs text-muted-foreground">{update.detail}</p>
+                      <p className="mt-1 text-[10px] text-muted-foreground">
+                        <DateDisplay date={update.date} />
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="fundraising" className="mt-3">

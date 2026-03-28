@@ -190,9 +190,22 @@ export function DealFormEnhanced({ onSubmit, initialData, isLoading = false, onC
               </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
+              <div className="rounded-lg border border-border bg-muted/30 p-3 mb-4">
+                <p className="text-xs font-medium text-muted-foreground mb-1">Deal Structure</p>
+                <p className="text-xs text-muted-foreground">
+                  One deal = one show. Each deal has its own token/unit structure representing
+                  ownership in the revenue participation for that show.
+                </p>
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <FieldGroup>
-                  <FieldLabel>StreamScore Valuation</FieldLabel>
+                  <FieldLabel className="flex items-center gap-1.5">
+                    StreamScore Valuation
+                    <span className="inline-flex items-center justify-center rounded-full bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground" title="Imported from StreamScore analytics platform. This is the algorithmic valuation estimate based on market data, comparable shows, and audience potential.">
+                      ?
+                    </span>
+                  </FieldLabel>
                   <div className="relative">
                     <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
                     <Input
@@ -204,7 +217,7 @@ export function DealFormEnhanced({ onSubmit, initialData, isLoading = false, onC
                       className="pl-9"
                     />
                   </div>
-                  <p className="text-xs text-muted-foreground">Internal valuation estimate</p>
+                  <p className="text-xs text-muted-foreground">Imported from StreamScore analytics</p>
                 </FieldGroup>
 
                 <FieldGroup>

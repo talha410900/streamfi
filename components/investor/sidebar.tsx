@@ -3,14 +3,13 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
-  LayoutDashboard,
-  TrendingUp,
-  Wallet,
-  Share2,
-  FileText,
-  Settings,
-  LogOut,
+  PieChart,
   ShoppingBag,
+  FolderOpen,
+  Share2,
+  FileSpreadsheet,
+  Wallet,
+  LogOut,
 } from 'lucide-react';
 import { ThemeToggle } from '@/components/shared/theme-toggle';
 import { logoutUser } from '@/lib/auth';
@@ -20,13 +19,12 @@ export function InvestorSidebar() {
   const router = useRouter();
 
   const navItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', href: '/investor/dashboard' },
-    { icon: ShoppingBag, label: 'Deals', href: '/investor/deals' },
-    { icon: TrendingUp, label: 'Investments', href: '/investor/investments' },
-    { icon: Wallet, label: 'Wallet', href: '/investor/wallet' },
+    { icon: PieChart, label: 'Portfolio', href: '/investor/dashboard' },
+    { icon: ShoppingBag, label: 'Open Deals', href: '/investor/deals' },
+    { icon: FolderOpen, label: 'My Documents', href: '/investor/documents' },
     { icon: Share2, label: 'Distributions', href: '/investor/distributions' },
-    { icon: FileText, label: 'Documents', href: '/investor/documents' },
-    { icon: Settings, label: 'Settings', href: '/investor/settings' },
+    { icon: FileSpreadsheet, label: 'Tax Documents', href: '/investor/tax-documents' },
+    { icon: Wallet, label: 'Account / Wallet', href: '/investor/wallet' },
   ];
 
   const handleLogout = async () => {

@@ -1,0 +1,39 @@
+---
+description: StreamFi UI — tokens, shadcn usage, motion, investor dashboard density
+globs: "**/*.tsx"
+alwaysApply: false
+---
+
+# UI and design system
+
+## Tokens and theme
+
+- Use **semantic Tailwind tokens**: `bg-background`, `text-foreground`, `border-border`, `bg-card`, `text-muted-foreground`, `bg-primary`, `text-primary-foreground`, `ring-ring`, etc. Avoid raw hex in components unless defining a one-off gradient/beam (landing-style accents).
+- **Brand accent**: green primary (`--primary` light/dark in `app/globals.css`). Keep dashboards restrained; marketing pages may use stronger gradients (e.g. emerald → teal) but should still compose with CSS variables where possible.
+- **Dark mode**: `class` strategy via `next-themes`; use `dark:` variants. Custom variant is set in globals (`@custom-variant dark`).
+
+## Components
+
+- Build from **`@/components/ui/*`** (Button, Card, Input, Tabs, etc.) with `cn()` from `@/lib/utils` for conditional classes.
+- **Forms**: `react-hook-form` + `zod` + `@hookform/resolvers` when adding real forms; mirror existing patterns in the repo.
+- **Icons**: `lucide-react` only; default icon sizing matches shadcn patterns (`size-4` inline with buttons unless overridden).
+- **Animation**: `motion/react` (Motion) for landing and expressive UI; keep motion subtle on dense dashboards unless matching an existing pattern.
+
+## Investor dashboard density
+
+- Routes under `app/investor/**` should stay **compact** vs default shadcn spacing.
+- Import `investorDensity` and `investorCardClass` from `@/components/investor/investor-density` for page layout, grids, and Card overrides instead of inventing new density scales.
+
+```tsx
+// ✅ GOOD — consistent investor shells
+import { investorDensity, investorCardClass } from '@/components/investor/investor-density';
+
+<div className={investorDensity.page}>
+  <Card className={investorCardClass()}>...</Card>
+</div>
+```
+
+## Adding new UI
+
+- New generic primitives → shadcn workflow / `components/ui` (see repo `components.json`).
+- New reusable non-primitive pieces → `components/shared` or domain folder, not scattered copies in every page.

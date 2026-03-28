@@ -1,37 +1,59 @@
-// Auth utility functions for StreamFi Ventures
-// Note: Since no integrations are enabled, using mock auth for demo purposes
-
 export type UserRole = 'admin' | 'investor';
+
+export type OnboardingStep =
+  | 'account_created'
+  | 'kyc'
+  | 'questionnaire'
+  | 'documents'
+  | 'funding'
+  | 'token_issuance'
+  | 'completed';
+
+export const ONBOARDING_STEPS: { key: OnboardingStep; label: string; description: string }[] = [
+  { key: 'account_created', label: 'Account Created', description: 'Admin created investor account' },
+  { key: 'kyc', label: 'KYC Verification', description: 'Identity & accreditation check' },
+  { key: 'questionnaire', label: 'Investor Questionnaire', description: 'Risk profile & suitability' },
+  { key: 'documents', label: 'Document Signing', description: 'Subscription & operating agreements' },
+  { key: 'funding', label: 'Funding Confirmation', description: 'Capital commitment & payment' },
+  { key: 'token_issuance', label: 'Token Issuance', description: 'Solana token minted to wallet' },
+];
 
 export interface User {
   id: string;
+  name: string;
   email: string;
   role: UserRole;
-  onboarding_status: 'pending' | 'kyc' | 'questionnaire' | 'documents' | 'approved' | 'rejected';
+  onboarding_step: OnboardingStep;
+  created_at: string;
+  created_by?: string;
+  temp_password?: boolean;
 }
 
-// Mock user storage (in production, use Supabase)
 const mockUsers: Record<string, User> = {
   'admin@streamfi.com': {
     id: 'admin-1',
+    name: 'Admin User',
     email: 'admin@streamfi.com',
     role: 'admin',
-    onboarding_status: 'approved',
+    onboarding_step: 'completed',
+    created_at: '2026-01-01',
   },
   'investor@streamfi.com': {
     id: 'investor-1',
+    name: 'John Investor',
     email: 'investor@streamfi.com',
     role: 'investor',
-    onboarding_status: 'pending',
+    onboarding_step: 'kyc',
+    created_at: '2026-02-01',
+    created_by: 'admin-1',
+    temp_password: false,
   },
 };
 
-// Mock authentication (no real integration)
 export async function loginUser(
   email: string,
   password: string,
 ): Promise<{ success: boolean; user?: User; error?: string }> {
-  // In production, verify password with bcrypt and check against Supabase
   const user = mockUsers[email];
   if (user && password.length > 0) {
     return { success: true, user };
@@ -39,29 +61,32 @@ export async function loginUser(
   return { success: false, error: 'Invalid credentials' };
 }
 
-export async function signupUser(
+export async function createInvestorAccount(
+  name: string,
   email: string,
-  password: string,
-  role: UserRole,
+  tempPassword: string,
+  createdBy: string,
 ): Promise<{ success: boolean; user?: User; error?: string }> {
-  // In production, hash password with bcrypt and create in Supabase
   if (mockUsers[email]) {
-    return { success: false, error: 'Email already exists' };
+    return { success: false, error: 'An account with this email already exists' };
   }
-  
+
   const newUser: User = {
-    id: `${role}-${Date.now()}`,
+    id: `investor-${Date.now()}`,
+    name,
     email,
-    role,
-    onboarding_status: role === 'admin' ? 'approved' : 'pending',
+    role: 'investor',
+    onboarding_step: 'account_created',
+    created_at: new Date().toISOString().split('T')[0],
+    created_by: createdBy,
+    temp_password: true,
   };
-  
+
   mockUsers[email] = newUser;
   return { success: true, user: newUser };
 }
 
 export async function logoutUser(): Promise<void> {
-  // Clear session
   localStorage.removeItem('streamfi_user');
 }
 
@@ -85,5 +110,26 @@ export function isInvestor(user: User | null): boolean {
 }
 
 export function isOnboardingComplete(user: User | null): boolean {
-  return user?.onboarding_status === 'approved';
+  return user?.onboarding_step === 'completed';
+}
+
+export function getOnboardingStepIndex(step: OnboardingStep): number {
+  const idx = ONBOARDING_STEPS.findIndex((s) => s.key === step);
+  return idx === -1 ? ONBOARDING_STEPS.length : idx;
+}
+
+export function getOnboardingProgress(step: OnboardingStep): {
+  current: number;
+  total: number;
+  percentage: number;
+} {
+  if (step === 'completed') {
+    return { current: ONBOARDING_STEPS.length, total: ONBOARDING_STEPS.length, percentage: 100 };
+  }
+  const current = getOnboardingStepIndex(step);
+  return {
+    current,
+    total: ONBOARDING_STEPS.length,
+    percentage: Math.round((current / ONBOARDING_STEPS.length) * 100),
+  };
 }

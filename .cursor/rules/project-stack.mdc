@@ -1,0 +1,23 @@
+---
+description: StreamFi stack, paths, and repo layout for all changes
+alwaysApply: true
+---
+
+# StreamFi project stack
+
+- **Framework**: Next.js App Router (Next 16+), React 19+, TypeScript (strict).
+- **Styling**: Tailwind CSS v4; entry is `app/globals.css` (`@import 'tailwindcss'`, `@theme inline`, shadcn CSS variables).
+- **UI base**: shadcn/ui **New York** style, **neutral** base, **CSS variables** on; icons **Lucide** (`lucide-react`). Config: `components.json`.
+- **Aliases** (use consistently): `@/components`, `@/components/ui`, `@/lib`, `@/hooks`.
+
+## Where code lives
+
+- **Primitives**: `components/ui/*` — extend here; do not duplicate button/card patterns ad hoc.
+- **Cross-route shared UI**: `components/shared/*` (e.g. theme toggle, currency, status badges).
+- **Domain sections**: `components/home/*`, `components/investor/*`, etc.
+- **Brand copy**: prefer `BRAND_NAME` and shared constants from `@/lib/constants` instead of hardcoding the product name.
+
+## Client vs server
+
+- Add `'use client'` only when the file uses hooks, browser APIs, or client-only libraries (e.g. `motion/react`).
+- Prefer Server Components for static pages when no client state is needed.
